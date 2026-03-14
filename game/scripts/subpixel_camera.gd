@@ -3,7 +3,7 @@ extends Camera2D
 var actual_cam_pos: Vector2
 
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	
 	actual_cam_pos = actual_cam_pos.lerp(%Player.global_position, delta * 3)
 	
