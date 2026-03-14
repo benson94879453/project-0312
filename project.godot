@@ -11,14 +11,16 @@ config_version=5
 [application]
 
 config/name="project0312"
-run/main_scene="res://game/playground/test.tscn"
+run/main_scene="uid://ctwrw7v8en5h2"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SignalManager="*uid://bydvdb6nlr557"
+
 [display]
 
-window/size/viewport_width=640
-window/size/viewport_height=360
 window/size/mode=3
 
 [editor_plugins]
@@ -71,4 +73,6 @@ run={
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
+textures/canvas_textures/default_texture_repeat=1
 rendering_device/driver.windows="d3d12"

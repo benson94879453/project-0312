@@ -2,7 +2,7 @@ extends Node
 
 class_name PlayerStateMachine
 
-@onready var movement_component: MovementComponent = %MovementComponent
+@export var movement_component: MovementComponent
 
 enum MoveState {
 	IDLE,
@@ -18,12 +18,3 @@ func update_state() -> void:
 		return
 
 	state = MoveState.RUN if movement_component.is_running else MoveState.WALK
-
-func get_animation_prefix() -> String:
-	match state:
-		MoveState.IDLE:
-			return "idle"
-		MoveState.RUN:
-			return "run"
-		_:
-			return "walk"

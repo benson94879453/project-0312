@@ -1,41 +1,46 @@
 [gd_scene format=3 uid="uid://8p3x5p5aq2op"]
 
 [ext_resource type="Script" uid="uid://dnt2nhxn4njqt" path="res://game/scripts/player.gd" id="1_a14nl"]
-[ext_resource type="SpriteFrames" uid="uid://b78a3ul7ovu1o" path="res://game/assets/player_sprite_frames_01.tres" id="2_4cp6x"]
+[ext_resource type="Texture2D" uid="uid://dvdcwgnfp2inr" path="res://game/assets/基拉祈.png" id="2_rtquu"]
 [ext_resource type="Script" uid="uid://tgy8mdfyedvo" path="res://game/scripts/movement.gd" id="3_xdsyw"]
 [ext_resource type="Script" uid="uid://cteb3qxp3lyhg" path="res://game/scripts/interact.gd" id="4_xdsyw"]
 [ext_resource type="Script" uid="uid://d0hwlojnha71g" path="res://game/scripts/state_machine.gd" id="5_state"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_player"]
-radius = 16.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rtquu"]
+size = Vector2(10, 10)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2lbyx"]
 radius = 20.0
 
-[node name="Player" type="CharacterBody2D" unique_id=791906188]
-position = Vector2(356, 229)
+[node name="Player" type="CharacterBody2D" unique_id=791906188 node_paths=PackedStringArray("movement_component", "state_machine", "sprite")]
 motion_mode = 1
 script = ExtResource("1_a14nl")
+movement_component = NodePath("MovementComponent")
+state_machine = NodePath("StateMachine")
+sprite = NodePath("Sprite2D")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=270861062]
-unique_name_in_owner = true
-sprite_frames = ExtResource("2_4cp6x")
-animation = &"idle_down"
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1072083151]
+texture = ExtResource("2_rtquu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=999999999]
-shape = SubResource("CircleShape2D_player")
+position = Vector2(0, 13.5)
+shape = SubResource("RectangleShape2D_rtquu")
 
-[node name="MovementComponent" type="Node" parent="." unique_id=1749405638 node_paths=PackedStringArray("body")]
+[node name="MovementComponent" type="Node" parent="." unique_id=1749405638]
 unique_name_in_owner = true
 script = ExtResource("3_xdsyw")
-body = NodePath("..")
+walk_speed = 80.0
+run_speed = 200.0
 
-[node name="StateMachine" type="Node" parent="." unique_id=1081442798]
+[node name="StateMachine" type="Node" parent="." unique_id=1081442798 node_paths=PackedStringArray("movement_component")]
 unique_name_in_owner = true
 script = ExtResource("5_state")
+movement_component = NodePath("../MovementComponent")
 
 [node name="InteractionComponent" type="Area2D" parent="." unique_id=748100341]
+visible = false
 script = ExtResource("4_xdsyw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionComponent" unique_id=727437745]
+visible = false
 shape = SubResource("CircleShape2D_2lbyx")

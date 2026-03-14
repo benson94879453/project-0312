@@ -1,0 +1,10 @@
+[godot-mcp-server] Starting MCP server v0.2.7...
+[2026-03-13T13:56:03.085Z] [GodotBridge] [INFO] WebSocket server listening on port 6505
+[godot-mcp-server] WebSocket server listening on port 6505
+[godot-mcp-server] Available tools: 37
+[godot-mcp-server] Waiting for Godot editor connection...
+[godot-mcp-server] MCP server connected and ready
+[2026-03-13T13:56:55.756Z] [GodotBridge] [INFO] Godot plugin connected
+[godot-mcp-server] Godot connected
+[2026-03-13T13:56:55.977Z] [GodotBridge] [INFO] Godot project: C:/Users/benso/OneDrive/文件/GitHub/project-0312/
+^C
