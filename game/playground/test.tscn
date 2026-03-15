@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://oreps3s17mo5" path="res://game/assets/磁磚地板.png" id="1_wa7d0"]
 [ext_resource type="Texture2D" uid="uid://boaidbebk05kk" path="res://game/assets/牆壁.png" id="2_8h6pr"]
 [ext_resource type="PackedScene" uid="uid://8p3x5p5aq2op" path="res://game/playground/player.tscn" id="3_0xj6j"]
+[ext_resource type="PackedScene" uid="uid://c7ho4ea75h4co" path="res://game/playground/table.tscn" id="4_kqj4t"]
+[ext_resource type="PackedScene" uid="uid://dcxlmexmufaju" path="res://game/assets/chair.tscn" id="6_26lu0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k7fkc"]
 texture = ExtResource("1_wa7d0")
@@ -19,28 +21,47 @@ sources/0 = SubResource("TileSetAtlasSource_k7fkc")
 texture = ExtResource("2_8h6pr")
 0:0/size_in_atlas = Vector2i(1, 8)
 0:0/0 = 0
+0:0/0/y_sort_origin = 50
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -56, 8, -56, 8, 56, -8, 56)
 1:0/0 = 0
+1:0/0/z_index = 1
+1:0/0/y_sort_origin = 6
 1:1/0 = 0
+1:1/0/z_index = 1
+1:1/0/y_sort_origin = 6
 1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -8, 8, -8, 8, 8, -4, 8)
 1:2/0 = 0
+1:2/0/y_sort_origin = 6
 1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -8, 8, -8, 8, 8, -4, 8)
 2:2/0 = 0
+2:2/0/y_sort_origin = 6
 2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, 0, 8, 8, -8, 8)
 3:2/0 = 0
+3:2/0/y_sort_origin = 6
 3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, 0, 8, 8, -8, 8)
 4:2/0 = 0
+4:2/0/y_sort_origin = 6
 4:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, 0, 8, 8, -8, 8)
 5:2/0 = 0
+5:2/0/y_sort_origin = 6
 5:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, 0, 8, 0, 8, 8, -8, 8)
 6:2/0 = 0
+6:2/0/y_sort_origin = 6
 6:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 4, -8, 4, 8, -8, 8)
 6:0/0 = 0
+6:0/0/z_index = 1
+6:0/0/y_sort_origin = 6
 6:1/0 = 0
+6:1/0/z_index = 1
+6:1/0/y_sort_origin = 6
 6:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 4, -8, 4, 8, -8, 8)
 2:1/0 = 0
+2:1/0/z_index = 1
+2:1/0/y_sort_origin = 6
 2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -8, 8, -8, 8, 8, -4, 8)
 5:1/0 = 0
+5:1/0/z_index = 1
+5:1/0/y_sort_origin = 6
 5:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 4, -8, 4, 8, -8, 8)
 
 [sub_resource type="TileSet" id="TileSet_26lu0"]
@@ -48,6 +69,7 @@ physics_layer_0/collision_layer = 1
 sources/2 = SubResource("TileSetAtlasSource_8h6pr")
 
 [node name="TestScene" type="Node2D" unique_id=1435179161]
+y_sort_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=913127716]
 script = ExtResource("1_k7fkc")
@@ -58,10 +80,20 @@ tile_map_data = PackedByteArray("AAABAAEAAAAAAAAAAAABAAIAAAAAAAAAAAABAAMAAAAAAAA
 tile_set = SubResource("TileSet_kqj4t")
 
 [node name="Wall" type="TileMapLayer" parent="." unique_id=915966449]
+y_sort_enabled = true
 position = Vector2(2, 43)
 tile_map_data = PackedByteArray("AAADAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAHAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAJAAAAAgAAAAAAAAAKAAAAAgAAAAAAAAALAAAAAgAAAAAAAAAMAAAAAgAAAAAAAAANAAAAAgAAAAAAAAAOAAAAAgAAAAAAAAAPAAAAAgAAAAAAAAAQAAAAAgAAAAAAAAARAAAAAgAAAAAAAAASAAAAAgAAAAAAAAATAAAAAgAAAAAAAAAUAAAAAgAAAAAAAAAVAAAAAgAAAAAAAAAWAAAAAgAAAAAAAAAXAAAAAgAAAAAAAAAYAAAAAgAAAAAAAAAZAAAAAgAAAAAAAAAaAAAAAgAAAAAAAAAbAAAAAgAAAAAAAAAcAAAAAgAAAAAAAAAdAAAAAgAAAAAAAAAeAAAAAgAAAAAAAAAfAAAAAgAAAAAAAAAgAAAAAgAAAAAAAAAhAAAAAgAAAAAAAAAiAAAAAgAAAAAAAAAjAAAAAgAAAAAAAAAkAAAAAgAAAAAAAAAlAAAAAgAAAAAAAAAmAAAAAgAAAAAAAAACAPz/AgABAAAAAAACAP3/AgABAAEAAAADABQAAgACAAIAAAACABQAAgABAAIAAAAEABQAAgACAAIAAAAFABQAAgACAAIAAAAGABQAAgACAAIAAAAHABQAAgACAAIAAAAIABQAAgACAAIAAAAJABQAAgACAAIAAAAKABQAAgACAAIAAAALABQAAgACAAIAAAAMABQAAgACAAIAAAANABQAAgACAAIAAAAOABQAAgACAAIAAAAPABQAAgACAAIAAAAQABQAAgACAAIAAAARABQAAgACAAIAAAASABQAAgADAAIAAAAXABQAAgAEAAIAAAAYABQAAgAFAAIAAAAZABQAAgAFAAIAAAAaABQAAgAFAAIAAAAbABQAAgAFAAIAAAAcABQAAgAFAAIAAAAdABQAAgAFAAIAAAAeABQAAgAFAAIAAAAfABQAAgAFAAIAAAAgABQAAgAFAAIAAAAhABQAAgAFAAIAAAAiABQAAgAFAAIAAAAjABQAAgAFAAIAAAAkABQAAgAFAAIAAAAlABQAAgAFAAIAAAAmABQAAgAFAAIAAAAnAPz/AgAGAAAAAAAnAP3/AgAGAAEAAAAnABQAAgAGAAIAAAACAP7/AgACAAEAAAACAP//AgACAAEAAAACAAAAAgACAAEAAAACAAEAAgACAAEAAAACAAIAAgACAAEAAAACAAMAAgACAAEAAAACAAQAAgACAAEAAAACAAUAAgACAAEAAAACAAYAAgACAAEAAAACAAcAAgACAAEAAAACAAgAAgACAAEAAAACAAkAAgACAAEAAAACAAoAAgACAAEAAAACAAsAAgACAAEAAAACAAwAAgACAAEAAAACAA0AAgACAAEAAAACAA4AAgACAAEAAAACAA8AAgACAAEAAAACABAAAgACAAEAAAACABEAAgACAAEAAAACABIAAgACAAEAAAACABMAAgACAAEAAAAnAP7/AgAFAAEAAAAnAP//AgAFAAEAAAAnAAAAAgAFAAEAAAAnAAEAAgAFAAEAAAAnAAIAAgAFAAEAAAAnAAMAAgAFAAEAAAAnAAQAAgAFAAEAAAAnAAUAAgAFAAEAAAAnAAYAAgAFAAEAAAAnAAcAAgAFAAEAAAAnAAgAAgAFAAEAAAAnAAkAAgAFAAEAAAAnAAoAAgAFAAEAAAAnAAsAAgAFAAEAAAAnAAwAAgAFAAEAAAAnAA0AAgAFAAEAAAAnAA4AAgAFAAEAAAAnAA8AAgAFAAEAAAAnABAAAgAFAAEAAAAnABEAAgAFAAEAAAAnABIAAgAFAAEAAAAnABMAAgAFAAEAAAA=")
 tile_set = SubResource("TileSet_26lu0")
 
+[node name="Object" type="Node2D" parent="." unique_id=1831435264]
+y_sort_enabled = true
+
+[node name="Table" parent="Object" unique_id=804256612 instance=ExtResource("4_kqj4t")]
+position = Vector2(216, 123)
+
 [node name="Player" parent="." unique_id=1737413164 instance=ExtResource("3_0xj6j")]
 unique_name_in_owner = true
 position = Vector2(96, 96)
+
+[node name="Chair" parent="." unique_id=1943944469 instance=ExtResource("6_26lu0")]
+position = Vector2(165, 120)

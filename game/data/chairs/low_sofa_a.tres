@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ChairData" format=3 uid="uid://dr7ymm1h0g582"]
+
+[ext_resource type="Script" uid="uid://cxcaxssfvi81f" path="res://game/scripts/resource/chair_data.gd" id="1_0o1ar"]
+[ext_resource type="Texture2D" uid="uid://dtth8g1lp3p4c" path="res://game/assets/矮沙發.png" id="2_35auw"]
+[ext_resource type="Script" uid="uid://bcwhnuystlf5k" path="res://game/scripts/resource/seat_slot_data.gd" id="2_uk1dl"]
+
+[sub_resource type="Resource" id="Resource_v77rn"]
+script = ExtResource("2_uk1dl")
+seat_slot_direction = Vector2(1, 0)
+metadata/_custom_type_script = "uid://bcwhnuystlf5k"
+
+[resource]
+script = ExtResource("1_0o1ar")
+chair_id = "low_sofa_a"
+texture = ExtResource("2_35auw")
+seats = Array[ExtResource("2_uk1dl")]([SubResource("Resource_v77rn")])
+metadata/_custom_type_script = "uid://cxcaxssfvi81f"

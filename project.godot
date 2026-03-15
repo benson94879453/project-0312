@@ -18,10 +18,12 @@ config/icon="res://icon.svg"
 [autoload]
 
 SignalManager="*uid://bydvdb6nlr557"
+ItemDatabase="*uid://bt47116du5th0"
 
 [display]
 
 window/size/mode=3
+window/stretch/scale_mode="integer"
 
 [editor_plugins]
 
@@ -67,6 +69,12 @@ run={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="Table"
+2d_physics/layer_3="Chair"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -74,5 +82,4 @@ run={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-textures/canvas_textures/default_texture_repeat=1
 rendering_device/driver.windows="d3d12"

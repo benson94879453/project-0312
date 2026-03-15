@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="FoodData" format=3 uid="uid://b3o4e8460735h"]
+
+[ext_resource type="Script" uid="uid://cp01iimfsxata" path="res://game/scripts/resource/food_data.gd" id="1_bpx50"]
+[ext_resource type="Texture2D" uid="uid://c6bbx1v10hld4" path="res://game/assets/foods/food_coffee.png" id="2_deqwt"]
+
+[resource]
+script = ExtResource("1_bpx50")
+id = "coffee"
+food_name = "咖啡"
+texture = ExtResource("2_deqwt")
+metadata/_custom_type_script = "uid://cp01iimfsxata"

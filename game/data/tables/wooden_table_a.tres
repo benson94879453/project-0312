@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TableData" format=3 uid="uid://bbcc553g6g56d"]
+
+[ext_resource type="Script" uid="uid://cnm25sg16on8f" path="res://game/scripts/resource/table_data.gd" id="1_vw1lc"]
+[ext_resource type="Texture2D" uid="uid://bspyom7v7kt6" path="res://game/assets/wooden_table_a.png" id="2_gorqu"]
+
+[resource]
+script = ExtResource("1_vw1lc")
+table_id = "wooden_table_a"
+texture = ExtResource("2_gorqu")
+hitbox_size = Vector2(32, 40)
+interactbox_size = Vector2(96, 96)
+metadata/_custom_type_script = "uid://cnm25sg16on8f"

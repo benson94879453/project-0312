@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://c7ho4ea75h4co"]
+
+[ext_resource type="Script" uid="uid://bpc5k2vb3040y" path="res://game/scripts/table.gd" id="1_mambv"]
+[ext_resource type="Texture2D" uid="uid://bspyom7v7kt6" path="res://game/assets/wooden_table_a.png" id="2_i5f7h"]
+[ext_resource type="Resource" uid="uid://bbcc553g6g56d" path="res://game/data/tables/wooden_table_a.tres" id="2_y14ch"]
+
+[node name="Table" type="StaticBody2D" unique_id=804256612]
+script = ExtResource("1_mambv")
+data = ExtResource("2_y14ch")
+
+[node name="TableSprite" type="Sprite2D" parent="." unique_id=709527605]
+texture = ExtResource("2_i5f7h")
+
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=218134420]
+
+[node name="InteractableComponent" type="Area2D" parent="." unique_id=1246600029]
+
+[node name="Interactbox" type="CollisionShape2D" parent="InteractableComponent" unique_id=748665177]
+
+[node name="FoodSlots" type="Node2D" parent="." unique_id=495469125]
