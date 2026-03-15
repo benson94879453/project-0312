@@ -91,9 +91,9 @@ y_sort_enabled = true
 [node name="Table" parent="Object" unique_id=804256612 instance=ExtResource("4_kqj4t")]
 position = Vector2(216, 123)
 
+[node name="Chair" parent="Object" unique_id=1943944469 instance=ExtResource("6_26lu0")]
+position = Vector2(184, 137)
+
 [node name="Player" parent="." unique_id=1737413164 instance=ExtResource("3_0xj6j")]
 unique_name_in_owner = true
-position = Vector2(96, 96)
-
-[node name="Chair" parent="." unique_id=1943944469 instance=ExtResource("6_26lu0")]
-position = Vector2(165, 120)
+position = Vector2(102, 108)

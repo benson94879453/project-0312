@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://bbcc553g6g56d" path="res://game/data/tables/wooden_table_a.tres" id="2_y14ch"]
 
 [node name="Table" type="StaticBody2D" unique_id=804256612]
+collision_layer = 2
 script = ExtResource("1_mambv")
 data = ExtResource("2_y14ch")
 

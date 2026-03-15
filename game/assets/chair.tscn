@@ -4,9 +4,14 @@
 [ext_resource type="Resource" uid="uid://dr7ymm1h0g582" path="res://game/data/chairs/low_sofa_a.tres" id="2_8a3qu"]
 [ext_resource type="Texture2D" uid="uid://dtth8g1lp3p4c" path="res://game/assets/矮沙發.png" id="3_3fe1r"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_3fe1r"]
+radius = 64.0
+
 [node name="Chair" type="StaticBody2D" unique_id=1943944469]
+collision_layer = 4
 script = ExtResource("1_sh0v4")
 data = ExtResource("2_8a3qu")
+facing_direction = Vector2(1, 0)
 
 [node name="ChairSprite" type="Sprite2D" parent="." unique_id=1782463111]
 texture = ExtResource("3_3fe1r")
@@ -14,6 +19,8 @@ texture = ExtResource("3_3fe1r")
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=1122910058]
 
 [node name="TableDetector" type="Area2D" parent="." unique_id=2079198769]
+collision_layer = 0
 collision_mask = 2
 
 [node name="DetectorShape" type="CollisionShape2D" parent="TableDetector" unique_id=181973703]
+shape = SubResource("CircleShape2D_3fe1r")

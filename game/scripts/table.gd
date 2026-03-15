@@ -15,6 +15,12 @@ var slot_sprites: Array[Sprite2D] = []
 @onready var slots_container: Node2D = $FoodSlots
 
 func _ready() -> void:
+	# 解決渲染遮擋：提高層級並確保 _draw 畫在 Sprite 前方
+	z_index = 10
+	z_as_relative = false
+	if sprite:
+		sprite.show_behind_parent = true
+	
 	if data:
 		_initialize_from_data()
 
@@ -56,11 +62,17 @@ func register_new_seats(chair: Chair, seat_info_list: Array[Dictionary]) -> void
 		
 		# 把椅子送來的字典陣列，全部倒進桌子的可用清單裡
 		available_seats.append_array(seat_info_list)
+		
+		# 修復 1: 必須呼叫 queue_redraw 才會觸發 _draw()
+		queue_redraw()
 
 # 除錯工具：把資料畫在螢幕上
 func _draw() -> void:
 	if not show_debug_seats or available_seats.is_empty():
 		return
+	
+	# 修復 2: 注入 Debug Print 驗證執行流
+	print("Table _draw() 正在執行，目前座位數：", available_seats.size())
 		
 	for seat in available_seats:
 		# 畫布 API 只能畫「相對於桌子本身」的本地座標，所以要轉回來
@@ -68,6 +80,6 @@ func _draw() -> void:
 		var dir = seat["direction"]
 		
 		# 畫一個半透明的綠色圓圈 (半徑 4) 代表座位點
-		draw_circle(local_pos, 4.0, Color(0, 1, 0, 0.5))
+		draw_circle(local_pos, 4.0, Color(0, 1, 0, 0.7))
 		# 畫一條紅線代表椅子的朝向 (長度 10)
-		draw_line(local_pos, local_pos + (dir * 10.0), Color(1, 0, 0, 0.8), 2.0)
+		draw_line(local_pos, local_pos + (dir * 15.0), Color(1, 0.2, 0.2, 0.9), 2.0)
