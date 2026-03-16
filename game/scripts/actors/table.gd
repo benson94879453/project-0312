@@ -1,10 +1,16 @@
-extends StaticBody2D
+﻿extends StaticBody2D
 class_name Table
+
+signal order_registered(customer: Node, food_id: String)
+signal food_received(food: FoodData)
+signal order_served(customer: Node, food: FoodData)
 
 @export var data: TableData
 @export var show_debug_seats: bool = true
 
-# Slot-aligned food data for future serving gameplay.
+# Runtime table-centric data.
+var current_customers: Array[Node] = []
+var expected_orders: Array[OrderData] = []
 var foods_on_table: Array[FoodData] = []
 var slot_sprites: Array[Sprite2D] = []
 
@@ -86,9 +92,69 @@ func get_free_seat_count() -> int:
 			free_count += 1
 	return free_count
 
+func add_customer(customer: Node) -> bool:
+	if customer == null:
+		return false
+	if current_customers.has(customer):
+		return true
+	current_customers.append(customer)
+	return true
+
+func remove_customer(customer: Node) -> bool:
+	if customer == null:
+		return false
+	var idx: int = current_customers.find(customer)
+	if idx < 0:
+		return false
+	current_customers.remove_at(idx)
+	return true
+
+func register_order(order: OrderData) -> bool:
+	if order == null or order.customer == null or order.food == null:
+		return false
+
+	add_customer(order.customer)
+	expected_orders.append(order)
+	order_registered.emit(order.customer, order.food.id)
+	return true
+
+func receive_food(food_item: FoodData) -> bool:
+	if food_item == null:
+		return false
+
+	var order_index: int = _find_matching_order_index(food_item)
+	if order_index < 0:
+		return false
+
+	var free_slot_index: int = _find_free_food_slot_index()
+	if free_slot_index < 0:
+		return false
+
+	foods_on_table[free_slot_index] = food_item
+	slot_sprites[free_slot_index].texture = food_item.texture
+
+	var served_order: OrderData = expected_orders[order_index]
+	expected_orders.remove_at(order_index)
+
+	food_received.emit(food_item)
+	order_served.emit(served_order.customer, food_item)
+	return true
+
 # Basic interaction hook called by InteractionComponent.
 func interact(actor: Node) -> void:
 	var actor_name: String = String(actor.name) if actor != null else "Unknown"
+
+	if actor != null and actor.has_method("get_held_food") and actor.has_method("try_consume_held_food"):
+		var held_food: FoodData = actor.call("get_held_food") as FoodData
+		if held_food != null:
+			var served_ok: bool = receive_food(held_food)
+			if served_ok:
+				actor.call("try_consume_held_food")
+				print("[Table] %s served %s" % [actor_name, held_food.id])
+				return
+			print("[Table] %s tried serving %s but no matching order/slot" % [actor_name, held_food.id])
+			return
+
 	var was_released: bool = release_seat(actor)
 	var was_reserved: bool = false
 	if not was_released:
@@ -100,12 +166,12 @@ func interact(actor: Node) -> void:
 	elif was_reserved:
 		result = "reserved"
 
-	print("[Table] Interacted by %s | result=%s | seats=%d/%d | free_food_slots=%d" % [
+	print("[Table] Interacted by %s | result=%s | seats=%d/%d | pending_orders=%d" % [
 		actor_name,
 		result,
 		get_free_seat_count(),
 		available_seats.size(),
-		_get_free_food_slot_count()
+		expected_orders.size()
 	])
 
 func _draw() -> void:
@@ -134,9 +200,15 @@ func _build_seat_record(seat_info: Dictionary) -> Dictionary:
 		record["direction"] = seat_info["direction"]
 	return record
 
-func _get_free_food_slot_count() -> int:
-	var free_food_slots: int = 0
-	for food in foods_on_table:
-		if food == null:
-			free_food_slots += 1
-	return free_food_slots
+func _find_matching_order_index(food_item: FoodData) -> int:
+	for i in range(expected_orders.size()):
+		var order: OrderData = expected_orders[i]
+		if order.matches_food(food_item):
+			return i
+	return -1
+
+func _find_free_food_slot_index() -> int:
+	for i in range(foods_on_table.size()):
+		if foods_on_table[i] == null:
+			return i
+	return -1

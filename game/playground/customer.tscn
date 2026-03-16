@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://b2v1xvhx2a0gy"]
+
+[ext_resource type="Texture2D" uid="uid://dvdcwgnfp2inr" path="res://game/assets/基拉祈.png" id="1_50kn0"]
+[ext_resource type="Script" uid="uid://dgyfm7dwsxmch" path="res://game/scripts/actors/customer.gd" id="1_sfnvp"]
+[ext_resource type="Script" uid="uid://bhd4x5m6bmfw2" path="res://game/scripts/components/customer_state_machine.gd" id="3_50kn0"]
+[ext_resource type="Script" uid="uid://7yf0ub42ke5b" path="res://game/scripts/components/customer_visual_component.gd" id="3_dp3rp"]
+[ext_resource type="Script" uid="uid://buhimw2ocgwwl" path="res://game/scripts/components/customer_movement_component.gd" id="4_sfnvp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_50kn0"]
+size = Vector2(10, 10)
+
+[node name="Customer" type="CharacterBody2D" unique_id=206644201]
+script = ExtResource("1_sfnvp")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2010144363]
+texture = ExtResource("1_50kn0")
+
+[node name="CustomerVisualComponent" type="Node2D" parent="." unique_id=298769298]
+script = ExtResource("3_dp3rp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=752791914]
+shape = SubResource("RectangleShape2D_50kn0")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=693920019]
+
+[node name="CustomerStateMachine" type="Node" parent="." unique_id=866753132]
+script = ExtResource("3_50kn0")
+
+[node name="CustomerMovementComponent" type="Node" parent="." unique_id=1604801423]
+script = ExtResource("4_sfnvp")
