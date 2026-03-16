@@ -1,11 +1,11 @@
 [gd_scene format=4 uid="uid://cgs8sqk110is"]
 
-[ext_resource type="Script" uid="uid://8sibdaxws4ms" path="res://game/scripts/subpixel_camera.gd" id="1_k7fkc"]
+[ext_resource type="Script" uid="uid://8sibdaxws4ms" path="res://game/scripts/systems/subpixel_camera.gd" id="1_k7fkc"]
 [ext_resource type="Texture2D" uid="uid://oreps3s17mo5" path="res://game/assets/磁磚地板.png" id="1_wa7d0"]
 [ext_resource type="Texture2D" uid="uid://boaidbebk05kk" path="res://game/assets/牆壁.png" id="2_8h6pr"]
 [ext_resource type="PackedScene" uid="uid://8p3x5p5aq2op" path="res://game/playground/player.tscn" id="3_0xj6j"]
 [ext_resource type="PackedScene" uid="uid://c7ho4ea75h4co" path="res://game/playground/table.tscn" id="4_kqj4t"]
-[ext_resource type="PackedScene" uid="uid://dcxlmexmufaju" path="res://game/assets/chair.tscn" id="6_26lu0"]
+[ext_resource type="PackedScene" uid="uid://dcxlmexmufaju" path="res://game/playground/chair.tscn" id="6_26lu0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_k7fkc"]
 texture = ExtResource("1_wa7d0")
@@ -73,6 +73,7 @@ y_sort_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=913127716]
 script = ExtResource("1_k7fkc")
+target_path = NodePath("../Player")
 
 [node name="Floor" type="TileMapLayer" parent="." unique_id=980040728]
 position = Vector2(2, 43)
@@ -94,6 +95,8 @@ position = Vector2(216, 123)
 [node name="Chair" parent="Object" unique_id=1943944469 instance=ExtResource("6_26lu0")]
 position = Vector2(184, 137)
 
+[node name="Chair2" parent="Object" unique_id=56077402 instance=ExtResource("6_26lu0")]
+position = Vector2(184, 109)
+
 [node name="Player" parent="." unique_id=1737413164 instance=ExtResource("3_0xj6j")]
-unique_name_in_owner = true
 position = Vector2(102, 108)

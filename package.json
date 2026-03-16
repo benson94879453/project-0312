@@ -1,0 +1,8 @@
+{
+  "name": "project-0312",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "obsidian:mcp": "node ./tools/obsidian-mcp-server.mjs"
+  }
+}

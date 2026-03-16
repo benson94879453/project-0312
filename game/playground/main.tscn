@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cgs8sqk110is" path="res://game/playground/test.tscn" id="1_58kwx"]
 [ext_resource type="Shader" uid="uid://bh8gspl3spq4p" path="res://game/shader/subpixel.gdshader" id="1_dv40g"]
-[ext_resource type="Script" uid="uid://ht8rkltj1hrg" path="res://game/scripts/sub_viewport_container.gd" id="2_dgfbk"]
+[ext_resource type="Script" uid="uid://ht8rkltj1hrg" path="res://game/scripts/systems/sub_viewport_container.gd" id="2_dgfbk"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dgfbk"]
 shader = ExtResource("1_dv40g")

@@ -1,0 +1,243 @@
+{
+  "main": {
+    "id": "9e7bbce788df5522",
+    "type": "split",
+    "children": [
+      {
+        "id": "6100b53a42c22182",
+        "type": "split",
+        "children": [
+          {
+            "id": "2d79cb9877c70834",
+            "type": "tabs",
+            "dimension": 75.49019607843137,
+            "children": [
+              {
+                "id": "be98bc08ef2d9ebf",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "game-map/game-mindmap.md.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "game-mindmap.md"
+                }
+              },
+              {
+                "id": "721de85e8a7ba289",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "note.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "note"
+                }
+              }
+            ],
+            "currentTab": 1
+          },
+          {
+            "id": "04aa13059555b872",
+            "type": "tabs",
+            "dimension": 24.509803921568626,
+            "children": [
+              {
+                "id": "0841042f4fe5cb0d",
+                "type": "leaf",
+                "state": {
+                  "type": "mindmap",
+                  "state": {},
+                  "icon": "dot-network",
+                  "title": "Mind Map of note"
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "horizontal"
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "ddf8a9bd8328806f",
+    "type": "split",
+    "children": [
+      {
+        "id": "2187fe2e3e8fff92",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "769c08af90c3bf6b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "檔案瀏覽器"
+            }
+          },
+          {
+            "id": "d0149f23adcbd91b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜尋"
+            }
+          },
+          {
+            "id": "cde33f1b9bb05a56",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "書籤"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "f91f5028d03f7b39",
+    "type": "split",
+    "children": [
+      {
+        "id": "4e79d03061368fd1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9154474a164cb96d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "歡迎.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "歡迎 的反向連結"
+            }
+          },
+          {
+            "id": "15c3316170f2c7df",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "歡迎.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "歡迎 的對外連結"
+            }
+          },
+          {
+            "id": "0c1f15c293577f7b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "標籤"
+            }
+          },
+          {
+            "id": "48c05d4a27c94235",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "所有屬性"
+            }
+          },
+          {
+            "id": "b8acb17ea77b0497",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "note.md",
+                "followCursor": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "note 的大綱"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:開啟快速切換": false,
+      "graph:查看關聯圖": false,
+      "canvas:建立新畫布": false,
+      "daily-notes:開啟今天的每日筆記": false,
+      "templates:插入模板": false,
+      "command-palette:開啟命令面板": false,
+      "bases:建立新的 base": false,
+      "mermaid-tools:Open Mermaid Toolbar": false
+    }
+  },
+  "active": "721de85e8a7ba289",
+  "lastOpenFiles": [
+    "game-map/game-pm-spec.md.md",
+    "note.md",
+    "game-map/game-mindmap.md.md",
+    "game-map/game-structure.md.md",
+    "changelog/log0316.md",
+    "changelog",
+    "tutorial/godot-collision.md",
+    "tutorial/godot-collision.md",
+    "game-map",
+    "tutorial",
+    "mermaid.md",
+    "mermaid canvas.canvas",
+    "未命名.base"
+  ]
+}

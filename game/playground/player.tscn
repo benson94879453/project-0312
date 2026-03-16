@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://8p3x5p5aq2op"]
 
-[ext_resource type="Script" uid="uid://dnt2nhxn4njqt" path="res://game/scripts/player.gd" id="1_a14nl"]
+[ext_resource type="Script" uid="uid://dnt2nhxn4njqt" path="res://game/scripts/actors/player.gd" id="1_a14nl"]
 [ext_resource type="Texture2D" uid="uid://dvdcwgnfp2inr" path="res://game/assets/基拉祈.png" id="2_rtquu"]
-[ext_resource type="Script" uid="uid://tgy8mdfyedvo" path="res://game/scripts/movement.gd" id="3_xdsyw"]
-[ext_resource type="Script" uid="uid://cteb3qxp3lyhg" path="res://game/scripts/interact.gd" id="4_xdsyw"]
-[ext_resource type="Script" uid="uid://d0hwlojnha71g" path="res://game/scripts/state_machine.gd" id="5_state"]
-[ext_resource type="Script" uid="uid://dbvin27ye2b5d" path="res://game/scripts/visual_component.gd" id="6_1irrm"]
+[ext_resource type="Script" uid="uid://tgy8mdfyedvo" path="res://game/scripts/components/movement_component.gd" id="3_xdsyw"]
+[ext_resource type="Script" uid="uid://cteb3qxp3lyhg" path="res://game/scripts/components/interact.gd" id="4_xdsyw"]
+[ext_resource type="Script" uid="uid://d0hwlojnha71g" path="res://game/scripts/components/state_machine.gd" id="5_state"]
+[ext_resource type="Script" uid="uid://dbvin27ye2b5d" path="res://game/scripts/components/visual_component.gd" id="6_1irrm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtquu"]
 size = Vector2(12, 12)
@@ -15,6 +15,7 @@ radius = 50.0
 
 [node name="Player" type="CharacterBody2D" unique_id=791906188 node_paths=PackedStringArray("movement_component", "state_machine")]
 y_sort_enabled = true
+collision_mask = 6
 motion_mode = 1
 script = ExtResource("1_a14nl")
 movement_component = NodePath("MovementComponent")
