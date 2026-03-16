@@ -6,20 +6,22 @@
 [ext_resource type="Script" uid="uid://cteb3qxp3lyhg" path="res://game/scripts/components/player_interact.gd" id="4_xdsyw"]
 [ext_resource type="Script" uid="uid://d0hwlojnha71g" path="res://game/scripts/components/player_state_machine.gd" id="5_state"]
 [ext_resource type="Script" uid="uid://dbvin27ye2b5d" path="res://game/scripts/components/player_visual_component.gd" id="6_1irrm"]
+[ext_resource type="Script" uid="uid://ci5qvl0dvj8ce" path="res://game/scripts/components/player_held_item.gd" id="7_i78ub"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rtquu"]
 size = Vector2(12, 12)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2lbyx"]
-radius = 50.0
+radius = 61.0
 
 [node name="Player" type="CharacterBody2D" unique_id=791906188 node_paths=PackedStringArray("movement_component", "state_machine")]
 y_sort_enabled = true
-collision_mask = 6
+collision_mask = 30
 motion_mode = 1
 script = ExtResource("1_a14nl")
 movement_component = NodePath("MovementComponent")
 state_machine = NodePath("StateMachine")
+debug_start_food_id = "coffee"
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1072083151]
 y_sort_enabled = true
@@ -42,6 +44,8 @@ script = ExtResource("5_state")
 movement_component = NodePath("../MovementComponent")
 
 [node name="InteractionComponent" type="Area2D" parent="." unique_id=748100341]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("4_xdsyw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionComponent" unique_id=727437745]
@@ -51,3 +55,7 @@ shape = SubResource("CircleShape2D_2lbyx")
 script = ExtResource("6_1irrm")
 sprite = NodePath("../Sprite2D")
 movement_component = NodePath("../MovementComponent")
+
+[node name="HeldItem" type="Sprite2D" parent="." unique_id=933989996]
+z_index = 1
+script = ExtResource("7_i78ub")

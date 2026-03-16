@@ -9,14 +9,23 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_50kn0"]
 size = Vector2(10, 10)
 
-[node name="Customer" type="CharacterBody2D" unique_id=206644201]
+[node name="Customer" type="CharacterBody2D" unique_id=206644201 node_paths=PackedStringArray("navigation_agent", "customer_state_machine", "customer_movement_component", "customer_visual_component")]
+collision_layer = 8
+collision_mask = 18
 script = ExtResource("1_sfnvp")
+auto_start_on_ready = true
+navigation_agent = NodePath("NavigationAgent2D")
+customer_state_machine = NodePath("CustomerStateMachine")
+customer_movement_component = NodePath("CustomerMovementComponent")
+customer_visual_component = NodePath("CustomerVisualComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=2010144363]
 texture = ExtResource("1_50kn0")
 
-[node name="CustomerVisualComponent" type="Node2D" parent="." unique_id=298769298]
+[node name="CustomerVisualComponent" type="Node2D" parent="." unique_id=298769298 node_paths=PackedStringArray("sprite", "movement_component")]
 script = ExtResource("3_dp3rp")
+sprite = NodePath("../Sprite2D")
+movement_component = NodePath("../CustomerMovementComponent")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=752791914]
 shape = SubResource("RectangleShape2D_50kn0")
@@ -28,3 +37,4 @@ script = ExtResource("3_50kn0")
 
 [node name="CustomerMovementComponent" type="Node" parent="." unique_id=1604801423]
 script = ExtResource("4_sfnvp")
+stop_distance = 20.0

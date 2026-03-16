@@ -2,7 +2,7 @@
 
 @export var movement_component: MovementComponent
 @export var state_machine: PlayerStateMachine
-@export var debug_start_food_id: String = "coffee"
+@export var debug_start_food_id: String = ""
 
 var facing_direction: Vector2 = Vector2.DOWN
 var held_food: FoodData = null

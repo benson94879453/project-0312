@@ -1,9 +1,10 @@
-﻿extends StaticBody2D
+extends StaticBody2D
 class_name Table
 
 signal order_registered(customer: Node, food_id: String)
 signal food_received(food: FoodData)
 signal order_served(customer: Node, food: FoodData)
+signal interaction_processed(result: Dictionary)
 
 @export var data: TableData
 @export var show_debug_seats: bool = true
@@ -24,7 +25,7 @@ var available_seats: Array[Dictionary] = []
 var connected_chairs: Array[Chair] = []
 
 func _ready() -> void:
-	z_index = 10
+	z_index = 0
 	z_as_relative = false
 	if sprite:
 		sprite.show_behind_parent = true
@@ -119,17 +120,15 @@ func register_order(order: OrderData) -> bool:
 	return true
 
 func receive_food(food_item: FoodData) -> bool:
-	if food_item == null:
-		return false
+	return try_receive_food(food_item).get("ok", false)
 
-	var order_index: int = _find_matching_order_index(food_item)
-	if order_index < 0:
-		return false
+func try_receive_food(food_item: FoodData) -> Dictionary:
+	var check: Dictionary = _check_food_receive(food_item)
+	if not check.get("ok", false):
+		return check
 
-	var free_slot_index: int = _find_free_food_slot_index()
-	if free_slot_index < 0:
-		return false
-
+	var order_index: int = check.get("order_index", -1)
+	var free_slot_index: int = check.get("slot_index", -1)
 	foods_on_table[free_slot_index] = food_item
 	slot_sprites[free_slot_index].texture = food_item.texture
 
@@ -138,7 +137,15 @@ func receive_food(food_item: FoodData) -> bool:
 
 	food_received.emit(food_item)
 	order_served.emit(served_order.customer, food_item)
-	return true
+
+	return {
+		"ok": true,
+		"reason": "served",
+		"order_index": order_index,
+		"slot_index": free_slot_index,
+		"customer": served_order.customer,
+		"food_id": food_item.id,
+	}
 
 # Basic interaction hook called by InteractionComponent.
 func interact(actor: Node) -> void:
@@ -147,13 +154,42 @@ func interact(actor: Node) -> void:
 	if actor != null and actor.has_method("get_held_food") and actor.has_method("try_consume_held_food"):
 		var held_food: FoodData = actor.call("get_held_food") as FoodData
 		if held_food != null:
-			var served_ok: bool = receive_food(held_food)
+			var receive_result: Dictionary = try_receive_food(held_food)
+			var served_ok: bool = receive_result.get("ok", false)
 			if served_ok:
 				actor.call("try_consume_held_food")
+				interaction_processed.emit({
+					"actor": actor_name,
+					"success": true,
+					"reason": "served",
+					"food_id": held_food.id,
+					"pending_orders": expected_orders.size(),
+					"foods_on_table": _debug_food_ids_on_table(),
+				})
 				print("[Table] %s served %s" % [actor_name, held_food.id])
 				return
-			print("[Table] %s tried serving %s but no matching order/slot" % [actor_name, held_food.id])
+			var fail_reason: String = String(receive_result.get("reason", "serve_failed"))
+			interaction_processed.emit({
+				"actor": actor_name,
+				"success": false,
+				"reason": fail_reason,
+				"food_id": held_food.id,
+				"pending_orders": expected_orders.size(),
+				"foods_on_table": _debug_food_ids_on_table(),
+			})
+			print("[Table] %s tried serving %s but failed (%s)" % [actor_name, held_food.id, fail_reason])
 			return
+
+		interaction_processed.emit({
+			"actor": actor_name,
+			"success": false,
+			"reason": "no_food_in_hand",
+			"food_id": "",
+			"pending_orders": expected_orders.size(),
+			"foods_on_table": _debug_food_ids_on_table(),
+		})
+		print("[Table] %s interacted without food in hand" % actor_name)
+		return
 
 	var was_released: bool = release_seat(actor)
 	var was_reserved: bool = false
@@ -173,6 +209,14 @@ func interact(actor: Node) -> void:
 		available_seats.size(),
 		expected_orders.size()
 	])
+	interaction_processed.emit({
+		"actor": actor_name,
+		"success": was_released or was_reserved,
+		"reason": result,
+		"food_id": "",
+		"pending_orders": expected_orders.size(),
+		"foods_on_table": _debug_food_ids_on_table(),
+	})
 
 func _draw() -> void:
 	if not show_debug_seats or available_seats.is_empty():
@@ -212,3 +256,29 @@ func _find_free_food_slot_index() -> int:
 		if foods_on_table[i] == null:
 			return i
 	return -1
+
+func _check_food_receive(food_item: FoodData) -> Dictionary:
+	if food_item == null:
+		return {"ok": false, "reason": "null_food"}
+
+	var order_index: int = _find_matching_order_index(food_item)
+	if order_index < 0:
+		return {"ok": false, "reason": "no_matching_order"}
+
+	var free_slot_index: int = _find_free_food_slot_index()
+	if free_slot_index < 0:
+		return {"ok": false, "reason": "table_full"}
+
+	return {
+		"ok": true,
+		"reason": "ok",
+		"order_index": order_index,
+		"slot_index": free_slot_index,
+	}
+
+func _debug_food_ids_on_table() -> Array[String]:
+	var result: Array[String] = []
+	for item in foods_on_table:
+		var food: FoodData = item as FoodData
+		result.append(food.id if food != null else "-")
+	return result

@@ -6,16 +6,32 @@ class_name Customer
 @export var target_table_path: NodePath
 @export var leave_target_path: NodePath
 @export var seat_target_random_offset: float = 12.0
+@export var auto_start_retry_interval_sec: float = 0.25
+@export var auto_start_max_attempts: int = 12
 
-@onready var navigation_agent: NavigationAgent2D = get_node_or_null("NavigationAgent2D") as NavigationAgent2D
-@onready var customer_state_machine: CustomerStateMachine = _resolve_state_machine()
-@onready var customer_movement_component: CustomerMovementComponent = _resolve_movement_component()
-@onready var customer_visual_component: CustomerVisualComponent = _resolve_visual_component()
+@export var navigation_agent: NavigationAgent2D
+@export var customer_state_machine: CustomerStateMachine
+@export var customer_movement_component: CustomerMovementComponent
+@export var customer_visual_component: CustomerVisualComponent
 
 var assigned_table: Table = null
 var current_order: OrderData = null
+var _auto_start_table: Table = null
+var _auto_start_attempts: int = 0
+var _auto_start_retry_timer: Timer = null
 
 func _ready() -> void:
+	_setup_auto_start_retry_timer()
+
+	if navigation_agent == null:
+		navigation_agent = get_node_or_null("NavigationAgent2D") as NavigationAgent2D
+	if customer_state_machine == null:
+		customer_state_machine = _resolve_state_machine()
+	if customer_movement_component == null:
+		customer_movement_component = _resolve_movement_component()
+	if customer_visual_component == null:
+		customer_visual_component = _resolve_visual_component()
+
 	if customer_movement_component != null:
 		customer_movement_component.setup(navigation_agent)
 
@@ -30,7 +46,7 @@ func _ready() -> void:
 		return
 
 	var table: Table = get_node_or_null(target_table_path) as Table
-	start_lifecycle(table)
+	_begin_auto_start(table)
 
 func _physics_process(delta: float) -> void:
 	if customer_state_machine != null:
@@ -45,14 +61,13 @@ func _physics_process(delta: float) -> void:
 	if customer_movement_component.consume_target_reached():
 		_on_reached_move_target()
 
-func start_lifecycle(target_table: Table) -> void:
+func start_lifecycle(target_table: Table) -> bool:
 	if target_table == null:
 		push_warning("[Customer] Missing target table")
-		return
+		return false
 
 	if not target_table.reserve_seat(self):
-		push_warning("[Customer] No free seat")
-		return
+		return false
 
 	assigned_table = target_table
 	assigned_table.add_customer(self)
@@ -67,6 +82,45 @@ func start_lifecycle(target_table: Table) -> void:
 		customer_movement_component.set_target(seat_target)
 	else:
 		_on_reached_move_target()
+	return true
+
+func _setup_auto_start_retry_timer() -> void:
+	if _auto_start_retry_timer != null:
+		return
+
+	_auto_start_retry_timer = Timer.new()
+	_auto_start_retry_timer.one_shot = true
+	add_child(_auto_start_retry_timer)
+	_auto_start_retry_timer.timeout.connect(_on_auto_start_retry_timeout)
+
+func _begin_auto_start(target_table: Table) -> void:
+	_auto_start_table = target_table
+	_auto_start_attempts = 0
+	_try_auto_start_once()
+
+func _try_auto_start_once() -> void:
+	if _auto_start_table == null:
+		push_warning("[Customer] Auto start failed: target table path is empty/invalid")
+		return
+
+	_auto_start_attempts += 1
+	if start_lifecycle(_auto_start_table):
+		if _auto_start_attempts > 1:
+			print("[Customer] Auto start succeeded after %d attempts" % _auto_start_attempts)
+		return
+
+	var max_attempts: int = max(auto_start_max_attempts, 1)
+	if _auto_start_attempts >= max_attempts:
+		push_warning("[Customer] Auto start failed after %d attempts (no available seat yet)" % max_attempts)
+		return
+
+	# Chairs register their seats a little later (after physics frames),
+	# so retry briefly instead of failing permanently in _ready().
+	var retry_delay: float = max(auto_start_retry_interval_sec, 0.05)
+	_auto_start_retry_timer.start(retry_delay)
+
+func _on_auto_start_retry_timeout() -> void:
+	_try_auto_start_once()
 
 func _create_and_submit_order() -> void:
 	if assigned_table == null:

@@ -46,7 +46,7 @@
           {
             "id": "04aa13059555b872",
             "type": "tabs",
-            "dimension": 24.509803921568626,
+            "dimension": 24.50980392156863,
             "children": [
               {
                 "id": "0841042f4fe5cb0d",
@@ -220,17 +220,16 @@
       "daily-notes:開啟今天的每日筆記": false,
       "templates:插入模板": false,
       "command-palette:開啟命令面板": false,
-      "bases:建立新的 base": false,
-      "mermaid-tools:Open Mermaid Toolbar": false
+      "bases:建立新的 base": false
     }
   },
   "active": "721de85e8a7ba289",
   "lastOpenFiles": [
-    "game-map/game-pm-spec.md.md",
+    "changelog/log0316.md",
     "note.md",
+    "game-map/game-pm-spec.md.md",
     "game-map/game-mindmap.md.md",
     "game-map/game-structure.md.md",
-    "changelog/log0316.md",
     "changelog",
     "tutorial/godot-collision.md",
     "tutorial/godot-collision.md",
