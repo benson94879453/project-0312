@@ -6,6 +6,7 @@
 
 [sub_resource type="Resource" id="Resource_v77rn"]
 script = ExtResource("2_uk1dl")
+seat_slot_position = Vector2(0, -16)
 seat_slot_direction = Vector2(1, 0)
 metadata/_custom_type_script = "uid://bcwhnuystlf5k"
 

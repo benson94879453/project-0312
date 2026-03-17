@@ -13,6 +13,7 @@ signal interaction_processed(result: Dictionary)
 var current_customers: Array[Node] = []
 var expected_orders: Array[OrderData] = []
 var foods_on_table: Array[FoodData] = []
+var food_slot_customers: Array[Node] = []
 var slot_sprites: Array[Sprite2D] = []
 
 @onready var sprite: Sprite2D = $TableSprite
@@ -48,6 +49,8 @@ func _initialize_from_data() -> void:
 
 	foods_on_table.resize(data.slot_positions.size())
 	foods_on_table.fill(null)
+	food_slot_customers.resize(data.slot_positions.size())
+	food_slot_customers.fill(null)
 	for slot_pos in data.slot_positions:
 		var new_slot_sprite: Sprite2D = Sprite2D.new()
 		new_slot_sprite.offset = slot_pos
@@ -65,19 +68,58 @@ func register_new_seats(chair: Chair, seat_info_list: Array[Dictionary]) -> void
 	queue_redraw()
 
 func reserve_seat(actor: Node) -> bool:
+	return reserve_seat_with_info(actor).get("ok", false)
+
+func try_seat_customer(customer: Node) -> Dictionary:
+	var seat: Dictionary = reserve_seat_with_info(customer)
+	if not seat.get("ok", false):
+		return {
+			"success": false,
+			"reason": String(seat.get("reason", "table_full")),
+		}
+	return {
+		"success": true,
+		"reason": "ok",
+		"chair": seat.get("chair", null),
+		"position": seat.get("position", global_position),
+		"direction": seat.get("direction", Vector2.DOWN),
+	}
+
+func reserve_seat_with_info(actor: Node) -> Dictionary:
 	if actor == null:
-		return false
+		return {"ok": false, "reason": "invalid_actor"}
 
-	for chair in connected_chairs:
-		if chair.is_occupied_by(actor):
-			return true
+	var existing_seat: Dictionary = get_reserved_seat_info(actor)
+	if existing_seat.get("ok", false):
+		return existing_seat
 
-	for chair in connected_chairs:
-		if chair.reserve(actor):
+	for seat in available_seats:
+		var chair: Chair = seat.get("chair", null) as Chair
+		if chair != null and chair.reserve(actor):
 			queue_redraw()
-			return true
+			return {
+				"ok": true,
+				"chair": chair,
+				"position": seat.get("position", global_position),
+				"direction": seat.get("direction", Vector2.ZERO),
+			}
 
-	return false
+	return {"ok": false, "reason": "table_full"}
+
+func get_reserved_seat_info(actor: Node) -> Dictionary:
+	if actor == null:
+		return {"ok": false}
+
+	for seat in available_seats:
+		var chair: Chair = seat.get("chair", null) as Chair
+		if chair != null and chair.is_occupied_by(actor):
+			return {
+				"ok": true,
+				"chair": chair,
+				"position": seat.get("position", global_position),
+				"direction": seat.get("direction", Vector2.ZERO),
+			}
+	return {"ok": false}
 
 func release_seat(actor: Node) -> bool:
 	for chair in connected_chairs:
@@ -133,6 +175,7 @@ func try_receive_food(food_item: FoodData) -> Dictionary:
 	slot_sprites[free_slot_index].texture = food_item.texture
 
 	var served_order: OrderData = expected_orders[order_index]
+	food_slot_customers[free_slot_index] = served_order.customer
 	expected_orders.remove_at(order_index)
 
 	food_received.emit(food_item)
@@ -146,6 +189,15 @@ func try_receive_food(food_item: FoodData) -> Dictionary:
 		"customer": served_order.customer,
 		"food_id": food_item.id,
 	}
+
+func clear_food_for_customer(customer: Node) -> bool:
+	if customer == null:
+		return false
+	for i in range(food_slot_customers.size()):
+		if food_slot_customers[i] == customer:
+			_clear_food_slot(i)
+			return true
+	return false
 
 # Basic interaction hook called by InteractionComponent.
 func interact(actor: Node) -> void:
@@ -282,3 +334,12 @@ func _debug_food_ids_on_table() -> Array[String]:
 		var food: FoodData = item as FoodData
 		result.append(food.id if food != null else "-")
 	return result
+
+func _clear_food_slot(index: int) -> void:
+	if index < 0 or index >= foods_on_table.size():
+		return
+	foods_on_table[index] = null
+	if index < food_slot_customers.size():
+		food_slot_customers[index] = null
+	if index < slot_sprites.size() and slot_sprites[index] != null:
+		slot_sprites[index].texture = null

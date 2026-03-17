@@ -7,7 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://c7ho4ea75h4co" path="res://game/playground/table.tscn" id="4_kqj4t"]
 [ext_resource type="PackedScene" uid="uid://dcxlmexmufaju" path="res://game/playground/chair.tscn" id="6_26lu0"]
 [ext_resource type="PackedScene" uid="uid://b2v1xvhx2a0gy" path="res://game/playground/customer.tscn" id="7_26lu0"]
+[ext_resource type="PackedScene" uid="uid://bs1m4loskawhp" path="res://game/playground/test_tools.tscn" id="9_ut37k"]
 [ext_resource type="Script" uid="uid://8r6xemelsbu4" path="res://game/scripts/systems/service_debug_hud.gd" id="14_higg1"]
+[ext_resource type="PackedScene" uid="uid://c8yvxg3ulq3a" path="res://game/ui/ui_manager.tscn" id="15_ui_manager"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_6hkcu"]
 vertices = PackedVector2Array(360, 363.84375, 316, 364.14844, 316, 361, 360, 361, 616, 117, 616, 361, 60, 117, 60, 361)
@@ -210,9 +212,20 @@ position = Vector2(339, 338)
 target_table_path = NodePath("../NavigationRegion2D/Object/Table")
 leave_target_path = NodePath("../LeavePosition")
 
+[node name="Customer2" parent="." unique_id=1225789432 instance=ExtResource("7_26lu0")]
+position = Vector2(339, 338)
+target_table_path = NodePath("../NavigationRegion2D/Object/Table")
+leave_target_path = NodePath("../LeavePosition")
+
 [node name="ServiceDebugHUD" type="CanvasLayer" parent="." unique_id=1147870378]
+visible = false
 script = ExtResource("14_higg1")
 table_path = NodePath("../NavigationRegion2D/Object/Table")
 
+[node name="UIManager" parent="." unique_id=2147483647 instance=ExtResource("15_ui_manager")]
+
 [node name="LeavePosition" type="Node2D" parent="." unique_id=362493383]
 position = Vector2(341, 376)
+
+[node name="TestTools" parent="." unique_id=1279319904 node_paths=PackedStringArray("target_node") instance=ExtResource("9_ut37k")]
+target_node = NodePath("../Player")

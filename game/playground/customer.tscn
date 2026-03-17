@@ -9,9 +9,16 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_50kn0"]
 size = Vector2(10, 10)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dp3rp"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t7ln3"]
+bg_color = Color(0.76230514, 0.6581959, 0.16761675, 1)
+corner_radius_bottom_left = 1
+
 [node name="Customer" type="CharacterBody2D" unique_id=206644201 node_paths=PackedStringArray("navigation_agent", "customer_state_machine", "customer_movement_component", "customer_visual_component")]
 collision_layer = 8
-collision_mask = 18
+collision_mask = 2
 script = ExtResource("1_sfnvp")
 auto_start_on_ready = true
 navigation_agent = NodePath("NavigationAgent2D")
@@ -38,3 +45,24 @@ script = ExtResource("3_50kn0")
 [node name="CustomerMovementComponent" type="Node" parent="." unique_id=1604801423]
 script = ExtResource("4_sfnvp")
 stop_distance = 20.0
+
+[node name="UI_Anchor" type="Node2D" parent="." unique_id=479882577]
+position = Vector2(0, -30)
+
+[node name="PatienceBar" type="ProgressBar" parent="UI_Anchor" unique_id=875949973]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -4.0
+offset_right = 20.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.8308397, 0.70642436, 0.42402622, 1)
+theme_override_styles/background = SubResource("StyleBoxFlat_dp3rp")
+theme_override_styles/fill = SubResource("StyleBoxFlat_t7ln3")
+value = 100.0
+show_percentage = false

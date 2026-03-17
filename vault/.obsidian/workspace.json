@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "2d79cb9877c70834",
+        "id": "4276af9fe93f0de6",
         "type": "tabs",
         "children": [
           {
-            "id": "be98bc08ef2d9ebf",
+            "id": "572546b5a21cfe62",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "game-map/game-diagrams.md.md",
+                "file": "customer-chair-table-architecture.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "game-diagrams.md"
+              "title": "customer-chair-table-architecture"
             }
           }
         ]
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "game-map/game-diagrams.md.md",
+                "file": "customer-chair-table-architecture.md",
                 "followCursor": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "game-diagrams.md 的大綱"
+              "title": "customer-chair-table-architecture 的大綱"
             }
           },
           {
@@ -194,16 +194,21 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "1ecec9aaf776a71b",
+  "active": "572546b5a21cfe62",
   "lastOpenFiles": [
-    "未命名 1.base",
+    "note.md",
+    "customer-chair-table-architecture.md",
+    "UIManager.md",
+    "task.md",
+    "UIManager.md17747985353.tmp",
     "未命名.base",
+    "未命名.md",
+    "changelog/log0316.md",
     "game-map/game-diagrams.md.md",
+    "未命名 1.base",
     "game-map/game-mindmap.md.md",
     "game-map/game-pm-spec.md.md",
     "game-map/game-structure.md.md",
-    "note.md",
-    "changelog/log0316.md",
     "changelog",
     "tutorial/godot-collision.md",
     "tutorial/godot-collision.md",

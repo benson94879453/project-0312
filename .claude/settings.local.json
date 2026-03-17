@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find C:/Users/user/Documents/GitHub/project-0312 -name \"package.json\" -o -name \"*.js\" -o -name \"mcp-server*\" 2>/dev/null | head -20)",
+      "Bash(ls -la C:/Users/user/Documents/GitHub/project-0312/*.mjs C:/Users/user/Documents/GitHub/project-0312/tools/ 2>/dev/null)",
+      "Bash(godot --headless --check-only -s game/scripts/actors/customer.gd 2>&1 || true)",
+      "Bash(godot --headless --check-only -s game/scripts/components/customer_visual_component.gd 2>&1 || true)",
+      "Bash(godot --headless --check-only -s game/scripts/actors/table.gd 2>&1 || true)",
+      "Bash(godot --headless --check-only -s game/scripts/components/customer_state_machine.gd 2>&1 || true)",
+      "Bash(\"/c/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" --headless --path \"C:/Users/user/Documents/GitHub/project-0312\" -s game/scripts/components/customer_visual_component.gd 2>&1)",
+      "Bash(\"/c/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" --headless --path \"C:/Users/user/Documents/GitHub/project-0312\" --scene game/playground/test_with_collector.tscn 2>&1)"
+    ]
+  }
+}

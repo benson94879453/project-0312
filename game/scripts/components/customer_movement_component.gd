@@ -26,6 +26,7 @@ func set_target(global_target: Vector2) -> void:
 
 func clear_target() -> void:
 	_has_target = false
+	_reached_target = false
 	_target_global = Vector2.ZERO
 
 func has_target() -> bool:
@@ -36,6 +37,15 @@ func consume_target_reached() -> bool:
 		return false
 	_reached_target = false
 	return true
+
+func stop_movement_immediately(current_global_position: Vector2) -> void:
+	current_velocity = Vector2.ZERO
+	move_direction = Vector2.ZERO
+	_has_target = false
+	_reached_target = false
+	_target_global = current_global_position
+	if _navigation_agent != null:
+		_navigation_agent.target_position = current_global_position
 
 func get_velocity(current_global_position: Vector2, delta: float) -> Vector2:
 	var desired_direction: Vector2 = Vector2.ZERO
