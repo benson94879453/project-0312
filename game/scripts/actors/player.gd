@@ -1,4 +1,4 @@
-﻿extends CharacterBody2D
+extends CharacterBody2D
 
 @export var movement_component: MovementComponent
 @export var state_machine: PlayerStateMachine
