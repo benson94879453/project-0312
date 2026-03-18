@@ -2,11 +2,14 @@
 
 ## 概述
 
-此系統實現顧客入座、點餐、用餐、離席的完整流程。三個主要腳本分工如下：
+此系統實現顧客入座、點餐、用餐、離席的完整流程，並已擴展為可支援家具編輯、格線放置、快照存檔與每日顧客計畫。核心分工如下：
 
 - **Chair** (椅子)：靜態場景物件，負責座位位置/方向定義與佔位管理
 - **Table** (桌子)：管理座位註冊、訂單、上菜、顧客列表
 - **Customer** (顧客)：狀態機驅動的角色，執行移動、點餐、用餐行為
+- **PlaceableRuntimeRegistry**：以 `Floor` TileMap 為基準管理家具格線、佔格、路徑檢查與桌椅重綁
+- **SaveManager**：以格座標快照保存/還原 pre-open 邊界資料
+- **CustomerSpawnExecutor**：以 `CustomerDayPlan` 作為唯一顧客生成來源
 
 ---
 
@@ -38,12 +41,24 @@
 
 #### `_attempt_register_to_table() -> void`
 - 查詢 `TableDetector` Area2D 的重疊物體
-- 找到第一個 Table 後呼叫 `_bind_to_table()`
+- 找到第一個 Table 後呼叫 `bind_to_table()`
 
-#### `_bind_to_table(table: Table) -> void`
+#### `bind_to_table(table: Table) -> void`
 - 建立 `registered_table` 引用
 - 遍歷 `data.seats` 建立座位資訊陣列
 - 呼叫 `table.register_new_seats(self, seat_info_list)`
+
+#### `unbind_from_table() -> void`
+- 從既有 `registered_table` 反註冊
+- 用於家具刪除、搬移或 registry 重建後的顯式重綁
+
+#### `build_seat_info_list_for_transform(target_position, rotation_step) -> Array[Dictionary]`
+- 依指定世界座標與旋轉角度，計算該椅子座位資料
+- 給 registry 做 preview / restore / route 驗證時使用
+
+#### `get_placeable_footprint_cells() -> Array[Vector2i]`
+- 回傳椅子在格線上的 footprint
+- 目前 `ChairData.footprint_cells` 預設為 `[Vector2i.ZERO]`，即 1 格
 
 **座位資訊結構**：
 ```gdscript
@@ -86,6 +101,7 @@
 | 屬性 | 型別 | 說明 |
 |------|------|------|
 | `data` | TableData | 桌子資料資源 |
+| `placeable_id` | String | 穩定家具 ID，用於存檔與 chair-table 重綁 |
 | `available_seats` | Array[Dictionary] | 所有座位資訊（從 Chairs 收集） |
 | `connected_chairs` | Array[Chair] | 綁定的椅子實體列表 |
 | `current_customers` | Array[Node] | 當前顧客列表 |
@@ -103,6 +119,14 @@
 - 將座位資訊加入 `available_seats`
 - 記錄 chair 到 `connected_chairs`
 - 呼叫 `queue_redraw()` 更新除錯繪製
+
+#### `unregister_chair(chair: Chair) -> void`
+- 將指定椅子的座位資料從 `available_seats` 與 `connected_chairs` 中移除
+- 用於 runtime 搬動家具後的顯式重綁
+
+#### `clear_registered_seats() -> void`
+- 清空所有當前註冊座位
+- 由 `PlaceableRuntimeRegistry.rebuild_registry()` 先清空後重建
 
 #### `try_seat_customer(customer: Node) -> Dictionary`
 - **顧客入座的主要入口**
@@ -130,6 +154,10 @@
 #### `release_seat(actor: Node) -> bool`
 - 遍歷 `connected_chairs` 呼叫 `chair.release(actor)`
 - 顧客離席時清理座位佔用
+
+#### `get_placeable_footprint_cells() -> Array[Vector2i]`
+- 回傳桌子在格線中的 footprint
+- 目前 `TableData.footprint_cells` 預設為 `[Vector2i.ZERO]`，即 1 格
 
 #### `register_order(order: OrderData) -> bool`
 - 註冊新訂單到 `expected_orders`
@@ -205,6 +233,7 @@
 - 檢查 table 與 chairs 就緒
 - 設定 `assigned_table` 並連接信號
 - 呼叫 `state_machine.start_lifecycle()`
+- production 路徑由 `CustomerSpawnExecutor` 生成顧客並觸發此入口
 
 #### `enter_moving_to_seat(seat_info: Dictionary) -> void`
 - **State: MOVING_TO_SEAT 的進入動作**
@@ -271,6 +300,96 @@ enum CustomerState {
     LEAVING         # 離席中
 }
 ```
+
+---
+
+## PlaceableRuntimeRegistry（格線放置核心）
+
+**檔案**：`game/scripts/systems/placeable_runtime_registry.gd`
+
+### 職責
+1. 以 `NavigationRegion2D/Floor` 的 `TileMapLayer` 當作唯一格線來源
+2. 管理目前已放置家具的 stable ID 與 occupied cells
+3. 在放置/搬移時驗證 floor bounds、wall、佔格與必要通路
+4. 在 registry rebuild 後重新綁定 chair -> table
+
+### 目前格線設定
+- `Floor` tile size：`48x48`
+- 世界座標轉格座標：`Floor.local_to_map(Floor.to_local(world_position))`
+- 格座標轉世界座標：`Floor.to_global(Floor.map_to_local(cell))`
+- 桌椅 footprint 由 `TableData.footprint_cells` / `ChairData.footprint_cells` 明確定義，而非由 hitbox 自動推導
+
+### 關鍵函數
+
+#### `validate_placeable_candidate(placeable, target_position, rotation_step, ignore_placeable_id)`
+- 驗證候選家具是否可放置
+- 依序檢查：
+  - 是否超出 floor
+  - 是否撞到 wall
+  - 是否撞到已佔用格
+  - 是否破壞入口 -> 出口 / 座位通路
+
+#### `commit_placeable_state(...)`
+- 編輯模式實際提交入口
+- 僅供玩家放置/搬移使用
+- 通過驗證後才會真正掛進 scene 並 `rebuild_registry()`
+
+#### `restore_placeable_state(...)`
+- 存檔讀回專用入口
+- **不跑 edit-time route / occupied 驗證**
+- 用於整包快照重建，避免合法布局在逐件重建時互相阻擋
+
+#### `rebuild_registry()`
+- 重新掃描 `Object` 容器中的桌椅
+- 重建 `_placeables_by_id`、`_occupied_cells`
+- 清空並重建 chair-table 綁定
+
+### 設計原則
+- 基本通路由系統保底，不完全丟給玩家自行承擔
+- 玩家可自行承擔效率差、路線繞遠等次級後果
+- 系統至少保證：
+  - 有合法入口到出口
+  - 至少有可達座位
+  - 不會因為家具放置直接 soft-lock 顧客系統
+
+---
+
+## SaveManager（快照邊界保存）
+
+**檔案**：`game/scripts/systems/save_manager.gd`
+
+### 職責
+1. 將目前 pre-open 邊界資料序列化到 `user://save_slot_1.json`
+2. 以 `DaySnapshot` / `PlaceableRecord` / `CustomerDayPlan` 當資料契約
+3. 在啟動時優先嘗試讀回最新快照
+4. 讀回後重建家具布局、金錢、天數與當日顧客計畫
+
+### 存檔座標策略
+- 不直接存世界浮點座標
+- 存 `grid_x / grid_y / rotation_step / resource_id / linked_placeable_id`
+- 好處：
+  - 重建穩定
+  - 減少浮點誤差
+  - 格線規則與放置規則一致
+
+---
+
+## CustomerPlanGenerator / CustomerSpawnExecutor
+
+**檔案**：
+- `game/scripts/systems/customer_plan_generator.gd`
+- `game/scripts/systems/customer_spawn_executor.gd`
+
+### 目前定位
+- `CustomerDayPlan` 已經是 production 顧客生成來源
+- 每天開始時，先生成或重用當日計畫，再由 executor 依 arrival time 生成顧客
+- debug 面板的「生成顧客」也已改成委派給 executor 的既有 spawn 流程，而不是自行 instantiate `Customer`
+
+### 生成來源規則
+- 正式顧客生成不再依賴場景內建 `Customer` 節點
+- `test.tscn` 已移除場景內建 `Customer` / `Customer2`
+- `customer.tscn` 預設 `auto_start_on_ready = false`
+- fresh boot 與 saved boot 都應收斂到 pre-open -> start day -> plan-driven spawn 這條路徑
 
 ### 關鍵屬性 (Task 4 新增)
 
@@ -459,9 +578,10 @@ StateMachine.on_move_target_reached()
 | 2026-03-17 | v1.1 | **Task 4 更新**：新增耐心系統與小費機制 |
 | 2026-03-18 | v1.2 | **文件修正**：補齊所有函數說明 (`setup`, `begin_leaving`, `reset_runtime`, `get_state_name`, `_ready`, `_ensure_eating_timer`, `_transition`, `_on_eating_timer_timeout`, `_state_to_text`) |
 | 2026-03-18 | v1.3 | **文件同步**：補上 `PatienceBar` 已接入 `Customer` 場景與執行時更新邏輯 |
+| 2026-03-18 | v1.4 | **架構同步**：新增格線放置 registry、快照保存、顧客計畫生成與 boot/pre-open 收斂說明 |
 
 ---
 
 *文件建立時間：2026-03-17*
 *對應程式碼版本：Git commit 2a7eac5 之後*
-*最新更新：Task 4 與耐心條顯示邏輯已對齊目前實作*
+*最新更新：Task 7 前後的格線/快照/顧客計畫流程已對齊目前實作*

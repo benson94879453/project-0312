@@ -12,14 +12,14 @@ signal exit_edit_mode_pressed
 
 @onready var toolbar_panel: PanelContainer = $ToolbarPanel
 @onready var status_label: Label = $StatusLabel
-@onready var table_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow/TableButton
-@onready var chair_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow/ChairButton
-@onready var move_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ActionRow/MoveButton
-@onready var rotate_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ActionRow/RotateButton
-@onready var confirm_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ActionRow/ConfirmButton
-@onready var cancel_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ActionRow/CancelButton
-@onready var delete_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ActionRow/DeleteButton
-@onready var exit_button: Button = $ToolbarPanel/MarginContainer/VBoxContainer/ExitRow/ExitButton
+@onready var table_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/PlacementRow/TableButton
+@onready var chair_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/PlacementRow/ChairButton
+@onready var move_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow/MoveButton
+@onready var rotate_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow/RotateButton
+@onready var confirm_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow/ConfirmButton
+@onready var cancel_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow/CancelButton
+@onready var delete_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow/DeleteButton
+@onready var exit_button: Button = $ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ExitRow/ExitButton
 
 var _edit_mode_controller: EditModeController = null
 

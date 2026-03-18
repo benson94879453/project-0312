@@ -31,12 +31,28 @@ func _create_preview_visuals() -> void:
 	
 	_preview_sprite = Sprite2D.new()
 	_preview_sprite.texture = source_sprite.texture
-	_preview_sprite.offset = source_sprite.offset
+	# Preview may be built from a temp placeable before _ready() applies data-driven offsets.
+	# For now, only pull sprite_offset directly from the current data resource.
+	_preview_sprite.offset = _get_preview_sprite_offset(source_sprite)
 	_preview_sprite.scale = source_sprite.scale
 	_preview_sprite.flip_h = source_sprite.flip_h
 	_preview_sprite.flip_v = source_sprite.flip_v
 	_preview_sprite.z_index = 100  # Render on top
 	add_child(_preview_sprite)
+
+func _get_preview_sprite_offset(source_sprite: Sprite2D) -> Vector2:
+	if _source_placeable == null:
+		return source_sprite.offset
+
+	var placeable_data: Resource = _source_placeable.get("data") as Resource
+	if placeable_data == null:
+		return source_sprite.offset
+
+	var sprite_offset_value: Variant = placeable_data.get("sprite_offset")
+	if typeof(sprite_offset_value) == TYPE_VECTOR2:
+		return sprite_offset_value as Vector2
+
+	return source_sprite.offset
 
 func _find_sprite_in_node(node: Node) -> Sprite2D:
 	# Look for a Sprite2D child

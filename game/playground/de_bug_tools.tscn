@@ -19,9 +19,11 @@ log_min_size = Vector2(400, 100)
 [node name="DeBugPanel" type="PanelContainer" parent="MessageHUD" unique_id=543809290]
 offset_right = 560.0
 offset_bottom = 320.0
+mouse_filter = 2
 
 [node name="Margin" type="MarginContainer" parent="MessageHUD/DeBugPanel" unique_id=1119584939]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
@@ -29,9 +31,11 @@ theme_override_constants/margin_bottom = 8
 
 [node name="Content" type="VBoxContainer" parent="MessageHUD/DeBugPanel/Margin" unique_id=139612550]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="ControlsRow" type="HBoxContainer" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=908112001]
 layout_mode = 2
+mouse_filter = 2
 
 [node name="SpawnCustomerButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=438118210]
 layout_mode = 2
@@ -59,6 +63,7 @@ text = "拿 Coffee"
 
 [node name="DaySpeedLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=932661248]
 layout_mode = 2
+mouse_filter = 2
 text = "時間倍率"
 
 [node name="DaySpeedOptionButton" type="OptionButton" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=673106099]
@@ -68,16 +73,19 @@ size_flags_horizontal = 3
 [node name="SnapshotLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=16918398]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+mouse_filter = 2
 text = "玩家狀態快照"
 autowrap_mode = 3
 
 [node name="TableLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=556566827]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+mouse_filter = 2
 text = "桌子狀態快照"
 autowrap_mode = 3
 
 [node name="LogOutLabel" type="RichTextLabel" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=764960896]
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
+mouse_filter = 2
 scroll_following = true

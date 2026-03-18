@@ -31,6 +31,9 @@ var _selected_placeable: Node2D = null
 var _pending_placeable_type: String = ""  # "table" or "chair"
 var _pending_resource_id: String = ""  # Resource ID for data lookup
 var _rotation_step: int = 0
+var _target_cell: Vector2i = Vector2i.ZERO
+var _target_world_position: Vector2 = Vector2.ZERO
+var _has_target: bool = false
 
 var _temp_placeable: Node2D = null
 var _original_position: Vector2 = Vector2.ZERO
@@ -63,6 +66,7 @@ func enter_edit_mode() -> bool:
 	_is_in_edit_mode = true
 	_current_mode = MODE_NONE
 	_rotation_step = 0
+	_has_target = false
 	
 	print("[EditModeController] Entered edit mode")
 	edit_mode_entered.emit()
@@ -76,6 +80,7 @@ func exit_edit_mode() -> void:
 	_is_in_edit_mode = false
 	_current_mode = MODE_NONE
 	_selected_placeable = null
+	_has_target = false
 	
 	print("[EditModeController] Exited edit mode")
 	edit_mode_exited.emit()
@@ -124,34 +129,52 @@ func start_moving_existing(placeable: Node2D) -> bool:
 # Select an existing placeable (for deletion or moving)
 func select_placeable_at(mouse_position: Vector2) -> Node2D:
 	if not _is_in_edit_mode:
+		print("[EditModeController] Select blocked. in_edit_mode=false mouse=%s" % mouse_position)
 		return null
 	
 	if _current_mode != MODE_NONE:
+		print("[EditModeController] Select blocked. mode=%s mouse=%s" % [String(_current_mode), mouse_position])
 		return null
 	
-	var cell: Vector2i = _floor_layer.local_to_map(_floor_layer.to_local(mouse_position))
+	_refresh_target_from_pointer(_get_pointer_world_position())
+	if not _has_target:
+		print("[EditModeController] Select blocked. no valid target for mouse=%s" % mouse_position)
+		return null
+	var cell: Vector2i = _target_cell
+	print("[EditModeController] Select attempt. mouse=%s cell=%s" % [mouse_position, cell])
 	
 	# Find placeable at this cell
 	var placeables: Array[Node2D] = _registry.get_registered_placeables()
+	print("[EditModeController] Registered placeables=%d" % placeables.size())
 	for placeable in placeables:
 		var cells: Array[Vector2i] = _get_placeable_cells(placeable, placeable.global_position)
+		print("[EditModeController] Candidate placeable=%s id=%s cells=%s" % [
+			placeable,
+			String(placeable.get("placeable_id")),
+			cells
+		])
 		if cell in cells:
 			_selected_placeable = placeable
+			print("[EditModeController] Selection success. placeable=%s id=%s" % [placeable, String(placeable.get("placeable_id"))])
 			placeable_selected.emit(placeable)
 			return placeable
 	
 	_selected_placeable = null
+	print("[EditModeController] Selection miss. cell=%s" % cell)
 	placeable_deselected.emit()
 	return null
 
 func delete_selected_placeable() -> bool:
 	if not _is_in_edit_mode or _selected_placeable == null:
+		print("[EditModeController] Delete blocked. in_edit_mode=%s selected=%s" % [_is_in_edit_mode, _selected_placeable])
 		return false
 	
 	var placeable_id: String = _selected_placeable.get("placeable_id") if _selected_placeable.has_method("get_placeable_type_key") else ""
 	if placeable_id.is_empty():
+		print("[EditModeController] Delete blocked. selected placeable has empty id: %s" % _selected_placeable)
 		return false
 	
+	print("[EditModeController] Deleting placeable id=%s node=%s" % [placeable_id, _selected_placeable])
 	_registry.remove_placeable(placeable_id)
 	_selected_placeable = null
 	placeable_deselected.emit()
@@ -164,15 +187,15 @@ func rotate_preview() -> void:
 		_update_validation()
 
 func confirm_placement() -> bool:
-	if not _is_in_edit_mode or _current_preview == null:
+	if not _is_in_edit_mode or _current_preview == null or not _has_target:
 		return false
 	
-	var mouse_pos: Vector2 = _current_preview.global_position
+	var target_position: Vector2 = _target_world_position
 	
 	if _current_mode == MODE_PLACING_NEW:
-		return _confirm_new_placement(mouse_pos)
+		return _confirm_new_placement(target_position)
 	elif _current_mode == MODE_MOVING_EXISTING:
-		return _confirm_move_placement(mouse_pos)
+		return _confirm_move_placement(target_position)
 	
 	return false
 
@@ -193,6 +216,7 @@ func _cancel_current_operation() -> void:
 	_pending_placeable_type = ""
 	_pending_resource_id = ""
 	_rotation_step = 0
+	_has_target = false
 	
 	if _temp_placeable != null:
 		_temp_placeable.queue_free()
@@ -259,12 +283,16 @@ func _create_preview() -> void:
 	_current_preview.setup(_temp_placeable, _floor_layer)
 	_current_preview.set_rotation_step(_rotation_step)
 	add_child(_current_preview)
+	_refresh_target_from_pointer(_get_pointer_world_position())
+	_sync_preview_to_target()
 
 func _create_preview_for_existing(placeable: Node2D) -> void:
 	_current_preview = PlacementPreview.new()
 	_current_preview.setup(placeable, _floor_layer)
 	_current_preview.set_rotation_step(_rotation_step)
 	add_child(_current_preview)
+	_refresh_target_from_pointer(_get_pointer_world_position())
+	_sync_preview_to_target()
 	
 	# Hide the original placeable while moving
 	placeable.visible = false
@@ -326,20 +354,35 @@ func _rotate_cell(cell: Vector2i, rotation_step: int) -> Vector2i:
 func update_preview_position(mouse_position: Vector2) -> void:
 	if _current_preview == null:
 		return
-	
-	# Snap to grid
-	var local_pos: Vector2 = _floor_layer.to_local(mouse_position)
-	var cell: Vector2i = _floor_layer.local_to_map(local_pos)
-	var snapped_pos: Vector2 = _floor_layer.to_global(_floor_layer.map_to_local(cell))
-	
-	_current_preview.global_position = snapped_pos
+	_refresh_target_from_pointer(mouse_position)
+	_sync_preview_to_target()
 	_update_validation()
+
+func _get_pointer_world_position() -> Vector2:
+	if _floor_layer == null:
+		return Vector2.ZERO
+	return _floor_layer.get_global_mouse_position()
+
+func _refresh_target_from_pointer(pointer_world_position: Vector2) -> void:
+	if _floor_layer == null:
+		_has_target = false
+		return
+	_target_cell = _floor_layer.local_to_map(_floor_layer.to_local(pointer_world_position))
+	_target_world_position = _floor_layer.to_global(_floor_layer.map_to_local(_target_cell))
+	_has_target = true
+
+func _sync_preview_to_target() -> void:
+	if _current_preview == null or not _has_target:
+		return
+	_current_preview.global_position = _target_world_position
 
 func _update_validation() -> void:
 	if _current_preview == null or _registry == null:
 		return
 	
-	var target_position: Vector2 = _current_preview.global_position
+	if not _has_target:
+		return
+	var target_position: Vector2 = _target_world_position
 	var ignore_id: String = ""
 	var placeable: Node2D = _temp_placeable if _current_mode == MODE_PLACING_NEW else _selected_placeable
 	
@@ -376,7 +419,7 @@ func _process(_delta: float) -> void:
 	
 	# Update preview position to follow mouse
 	if _current_preview != null:
-		update_preview_position(get_viewport().get_mouse_position())
+		update_preview_position(_get_pointer_world_position())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not _is_in_edit_mode:
@@ -388,7 +431,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
 			if _current_mode == MODE_NONE:
 				# Try to select existing placeable
-				select_placeable_at(mouse_event.global_position)
+				select_placeable_at(_get_pointer_world_position())
 	elif event is InputEventKey:
 		var key_event: InputEventKey = event as InputEventKey
 		

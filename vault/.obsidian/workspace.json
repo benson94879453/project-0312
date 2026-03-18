@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "current/task.md",
+                "file": "current/runtime-architecture.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "task"
+              "title": "runtime-architecture"
             }
           }
         ]
@@ -195,8 +195,12 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "769c08af90c3bf6b",
+  "active": "572546b5a21cfe62",
   "lastOpenFiles": [
+    "current/runtime-architecture-map.md",
+    "current/UIManager.md",
+    "current/task.md",
+    "current/runtime-architecture.md",
     "未命名.md",
     "未命名 1.base",
     "changelog/log0316.md",
@@ -205,9 +209,7 @@
     "game-map/game-structure.md.md",
     "game-map/game-diagrams.md.md",
     "current/debug-tools-and-opencode-update.md",
-    "current/task.md",
     "current/customer-chair-table-architecture.md",
-    "current/UIManager.md",
     "note.md",
     "未命名.base",
     "game-map/game-mindmap.md.md",

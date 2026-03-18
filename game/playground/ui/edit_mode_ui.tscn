@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://h3x1mf5bb5aa"]
 
-[ext_resource type="Script" path="res://game/scripts/ui/edit_mode_ui.gd" id="1_editui"]
+[ext_resource type="Script" uid="uid://bv1rrdegnbt40" path="res://game/scripts/ui/edit_mode_ui.gd" id="1_editui"]
 
-[node name="EditModeUI" type="Control"]
+[node name="EditModeUI" type="Control" unique_id=595390165]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_editui")
 
-[node name="StatusLabel" type="Label" parent="."]
+[node name="StatusLabel" type="Label" parent="." unique_id=1655717613]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -28,7 +28,7 @@ grow_vertical = 0
 text = "Edit Mode - Select furniture or place new"
 horizontal_alignment = 1
 
-[node name="ToolbarPanel" type="PanelContainer" parent="."]
+[node name="ToolbarPanel" type="PanelContainer" parent="." unique_id=1647397020]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -39,85 +39,89 @@ offset_right = -20.0
 offset_bottom = 280.0
 grow_horizontal = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="ToolbarPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="ToolbarPanel" unique_id=658433221]
+layout_mode = 2
+follow_focus = true
+
+[node name="MarginContainer" type="MarginContainer" parent="ToolbarPanel/ScrollContainer" unique_id=2104324264]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ToolbarPanel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ToolbarPanel/ScrollContainer/MarginContainer" unique_id=1524904996]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=119953412]
 layout_mode = 2
 text = "Edit Mode"
 horizontal_alignment = 1
 
-[node name="Separator" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="Separator" type="HSeparator" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1554898711]
 layout_mode = 2
 
-[node name="PlacementLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="PlacementLabel" type="Label" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=623325327]
 layout_mode = 2
 text = "Place New"
 
-[node name="PlacementRow" type="HBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="PlacementRow" type="HBoxContainer" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1523480847]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TableButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow"]
+[node name="TableButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/PlacementRow" unique_id=1398404836]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Table"
 
-[node name="ChairButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow"]
+[node name="ChairButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/PlacementRow" unique_id=940136679]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Chair"
 
-[node name="Separator2" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="Separator2" type="HSeparator" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1939389477]
 layout_mode = 2
 
-[node name="ActionLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="ActionLabel" type="Label" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=891593971]
 layout_mode = 2
 text = "Actions"
 
-[node name="ActionRow" type="VBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="ActionRow" type="VBoxContainer" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1687687341]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="MoveButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+[node name="MoveButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow" unique_id=1517475704]
 layout_mode = 2
 disabled = true
 text = "Move Selected"
 
-[node name="RotateButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+[node name="RotateButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow" unique_id=152911875]
 layout_mode = 2
 disabled = true
 text = "Rotate (R)"
 
-[node name="ConfirmButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+[node name="ConfirmButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow" unique_id=228951267]
 layout_mode = 2
 disabled = true
 text = "Confirm (Enter)"
 
-[node name="CancelButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+[node name="CancelButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow" unique_id=484367779]
 layout_mode = 2
 disabled = true
 text = "Cancel (Esc)"
 
-[node name="DeleteButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+[node name="DeleteButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ActionRow" unique_id=639623126]
 layout_mode = 2
 text = "Delete (Del)"
 
-[node name="Separator3" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="Separator3" type="HSeparator" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=91888491]
 layout_mode = 2
 
-[node name="ExitRow" type="HBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+[node name="ExitRow" type="HBoxContainer" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer" unique_id=1266591803]
 layout_mode = 2
 
-[node name="ExitButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ExitRow"]
+[node name="ExitButton" type="Button" parent="ToolbarPanel/ScrollContainer/MarginContainer/VBoxContainer/ExitRow" unique_id=366203487]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Exit Edit Mode"

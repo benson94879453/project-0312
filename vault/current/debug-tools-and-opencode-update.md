@@ -62,21 +62,24 @@ Scene tree includes:
 
 #### 1. Give test food
 
-- Existing world-side action kept in `world_de_bug.gd`
-- Uses `test_add_coffee`
-- Gives `coffee` to the player target
+- UI entry: `拿 Coffee`
+- Now mouse-button only
+- Flow:
+  - `MessageHUD` emits `coffee_requested`
+  - `DeBugTools` forwards to `WorldDeBug.grant_food_to_target()`
+  - `WorldDeBug` gives `coffee` to the current player target
 
 #### 2. Spawn customer
 
 - UI entry: `生成顧客`
 - Flow:
-  - instantiate `res://game/playground/customer.tscn`
-  - place the instance into the gameplay parent
-  - assign `target_table_path`
-  - assign `leave_target_path`
-  - call `start_lifecycle(_table)`
-- Failure guard:
-  - if no free seat exists, spawn is rejected cleanly
+  - `MessageHUD` emits `spawn_customer_requested`
+  - `DeBugTools` forwards to `WorldDeBug.spawn_customer()`
+  - `WorldDeBug` delegates to `CustomerSpawnExecutor.spawn_next_pending_customer()`
+  - actual customer creation uses the same production spawn path as normal day-plan execution
+- Result:
+  - no longer depends on a scene-authored static table node for spawn logic
+  - reuses existing day plan / table selection / lifecycle rules
 
 #### 3. Accelerate day time
 
@@ -96,6 +99,24 @@ Scene tree includes:
 Important behavior:
 - This only accelerates day progression.
 - It does not globally speed up player movement or the entire engine timescale.
+
+#### 4. Start day manually
+
+- UI entry: `開始營業`
+- Reason:
+  - after the pre-open / next-day pipeline split, time no longer advances until `DayManager.start_day()` is explicitly called
+- Flow:
+  - `MessageHUD` emits `start_day_requested`
+  - `DeBugTools` calls `DayManager.start_day()` when not already active / transitioning
+
+---
+
+### Input model update
+
+- Debug panel keyboard triggers have been removed
+- `world_de_bug.gd` no longer uses `_unhandled_input()` for `test_add_coffee`
+- Current debug interactions are intended to be mouse-button-only via UI buttons
+- Player movement / interaction hotkeys still exist in normal gameplay scripts and were not changed as part of this debug-panel cleanup
 
 ---
 
@@ -174,11 +195,13 @@ Meaning:
 
 1. Open `test.tscn`
 2. Verify `DeBugTools` panel appears
-3. Click `生成顧客`
-4. Confirm the new customer can enter the normal lifecycle
-5. Switch time multiplier to `2x/4x/8x`
-6. Confirm day progress speeds up while player control remains normal
-7. Force a patience-depleted leave case and confirm the pending order is removed
+3. Click `開始營業` and confirm time starts ticking
+4. Click `拿 Coffee` and confirm the player receives coffee
+5. Click `生成顧客`
+6. Confirm the new customer is spawned through the normal day-plan executor path
+7. Switch time multiplier to `2x/4x/8x`
+8. Confirm day progress speeds up while player control remains normal
+9. Force a patience-depleted leave case and confirm the pending order is removed
 
 ### In terminal
 

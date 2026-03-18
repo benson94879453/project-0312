@@ -164,11 +164,16 @@ func restore_placeable_state(placeable: Node2D, target_position: Vector2, rotati
 func remove_placeable(placeable_id: String) -> void:
 	var placeable: Node2D = get_placeable(placeable_id)
 	if placeable == null:
+		print("[PlaceableRuntimeRegistry] Delete lookup failed. id=%s registered_ids=%s" % [placeable_id, _placeables_by_id.keys()])
 		return
+	print("[PlaceableRuntimeRegistry] Removing placeable id=%s node=%s" % [placeable_id, placeable])
 	if placeable is Chair:
 		(placeable as Chair).unbind_from_table()
-	placeable.queue_free()
-	request_registry_refresh()
+	var parent: Node = placeable.get_parent()
+	if parent != null:
+		parent.remove_child(placeable)
+	placeable.free()
+	rebuild_registry()
 
 func _resolve_scene_anchors() -> void:
 	_navigation_region = get_node_or_null(navigation_region_path) as NavigationRegion2D

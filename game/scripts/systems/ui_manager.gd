@@ -100,6 +100,10 @@ func _on_cancel_pressed() -> void:
 
 func _on_delete_pressed() -> void:
 	if _edit_mode_controller:
+		print("[UIManager] Delete pressed. selected=%s mode=%s" % [
+			_edit_mode_controller.get_selected_placeable(),
+			String(_edit_mode_controller.get_current_mode())
+		])
 		var success: bool = _edit_mode_controller.delete_selected_placeable()
 		if not success and edit_mode_ui:
 			edit_mode_ui.show_message("Nothing selected to delete", true)
