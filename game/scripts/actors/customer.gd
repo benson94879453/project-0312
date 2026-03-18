@@ -12,6 +12,8 @@ class_name Customer
 @export var customer_movement_component: CustomerMovementComponent
 @export var customer_visual_component: CustomerVisualComponent
 
+@onready var patience_bar: ProgressBar = get_node_or_null("UI_Anchor/PatienceBar") as ProgressBar
+
 var assigned_table: Table = null
 var current_order: OrderData = null
 var facing_direction: Vector2 = Vector2.DOWN
@@ -42,6 +44,8 @@ func _ready() -> void:
 	if customer_state_machine != null:
 		customer_state_machine.setup(self)
 
+	_update_patience_bar()
+
 	if not auto_start_on_ready:
 		return
 
@@ -62,6 +66,8 @@ func _physics_process(delta: float) -> void:
 
 	if customer_movement_component.consume_target_reached() and customer_state_machine != null:
 		customer_state_machine.on_move_target_reached()
+
+	_update_patience_bar()
 
 func start_lifecycle(target_table: Table) -> bool:
 	if target_table == null:
@@ -237,6 +243,20 @@ func _set_facing_direction(direction: Vector2) -> void:
 	if direction == Vector2.ZERO:
 		return
 	facing_direction = direction.normalized()
+
+func _update_patience_bar() -> void:
+	if patience_bar == null or customer_state_machine == null:
+		return
+
+	var is_waiting_food: bool = customer_state_machine.state == CustomerStateMachine.CustomerState.WAITING_FOOD
+	patience_bar.visible = is_waiting_food
+	if not is_waiting_food:
+		return
+
+	var max_patience: float = maxf(customer_state_machine.max_patience_sec, 0.001)
+	var patience_ratio: float = clampf(customer_state_machine.current_patience / max_patience, 0.0, 1.0)
+	patience_bar.max_value = 100.0
+	patience_bar.value = patience_ratio * 100.0
 
 func _connect_table_signals(table: Table) -> void:
 	if table == null:

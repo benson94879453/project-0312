@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://c8yvxg3ulq3a"]
+
+[ext_resource type="Script" uid="uid://c4m3jygbg0k2h" path="res://game/scripts/systems/ui_manager.gd" id="1_abc123"]
+[ext_resource type="Script" uid="uid://cfbhaxrbg4c2b" path="res://game/scripts/systems/hud_layer.gd" id="2_def456"]
+[ext_resource type="PackedScene" uid="uid://d4f5g6h7i8kak" path="res://game/playground/ui/end_of_day_panel.tscn" id="3_endofday"]
+[ext_resource type="PackedScene" uid="uid://editmodeui001" path="res://game/playground/ui/edit_mode_ui.tscn" id="4_editui"]
+
+[node name="UIManager" type="CanvasLayer" unique_id=831281141]
+script = ExtResource("1_abc123")
+
+[node name="HUD_Layer" type="Control" parent="." unique_id=1097911650]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+script = ExtResource("2_def456")
+
+[node name="MarginContainer" type="MarginContainer" parent="HUD_Layer" unique_id=797990438]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HUD_Layer/MarginContainer" unique_id=480674767]
+layout_mode = 2
+
+[node name="MoneyIcon" type="TextureRect" parent="HUD_Layer/MarginContainer/HBoxContainer" unique_id=425959995]
+layout_mode = 2
+stretch_mode = 3
+
+[node name="MoneyLabel" type="Label" parent="HUD_Layer/MarginContainer/HBoxContainer" unique_id=1121757837]
+layout_mode = 2
+text = "$ 0"
+
+[node name="Spacer" type="Control" parent="HUD_Layer/MarginContainer/HBoxContainer" unique_id=195883172]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeLabel" type="Label" parent="HUD_Layer/MarginContainer/HBoxContainer" unique_id=750450708]
+layout_mode = 2
+text = "09:00 AM"
+horizontal_alignment = 2
+
+[node name="Menu_Layer" type="Control" parent="." unique_id=1037546221]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EndOfDayPanel" parent="Menu_Layer" unique_id=523680351 instance=ExtResource("3_endofday")]
+layout_mode = 1
+
+[node name="EditModeUI" parent="Menu_Layer" unique_id=999999888 instance=ExtResource("4_editui")]
+layout_mode = 1

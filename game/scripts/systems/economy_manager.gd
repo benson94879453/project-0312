@@ -88,6 +88,10 @@ func add_money(amount: int) -> void:
 	current_money += amount
 	SignalManager.money_updated.emit(current_money, total_earnings_today)
 
+func set_current_money(amount: int) -> void:
+	current_money = max(amount, 0)
+	SignalManager.money_updated.emit(current_money, total_earnings_today)
+
 ## 嘗試花費金錢，回傳是否成功
 func try_spend_money(amount: int) -> bool:
 	if current_money < amount:

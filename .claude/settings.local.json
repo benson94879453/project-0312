@@ -8,7 +8,15 @@
       "Bash(godot --headless --check-only -s game/scripts/actors/table.gd 2>&1 || true)",
       "Bash(godot --headless --check-only -s game/scripts/components/customer_state_machine.gd 2>&1 || true)",
       "Bash(\"/c/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" --headless --path \"C:/Users/user/Documents/GitHub/project-0312\" -s game/scripts/components/customer_visual_component.gd 2>&1)",
-      "Bash(\"/c/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" --headless --path \"C:/Users/user/Documents/GitHub/project-0312\" --scene game/playground/test_with_collector.tscn 2>&1)"
+      "Bash(\"/c/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" --headless --path \"C:/Users/user/Documents/GitHub/project-0312\" --scene game/playground/test_with_collector.tscn 2>&1)",
+      "Bash(npx -y godot-mcp@latest get_errors 2>&1 || echo \"需要直接呼叫工具\")",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"tools/list\"}' | npx -y godot-mcp@latest 2>&1)",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 2, \"method\": \"tools/call\", \"params\": {\"name\": \"get_debug_output\", \"arguments\": {}}}' | npx -y godot-mcp@latest 2>&1)",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 3, \"method\": \"tools/call\", \"params\": {\"name\": \"run_project\", \"arguments\": {\"projectPath\": \"C:\\\\\\\\Users\\\\\\\\user\\\\\\\\Documents\\\\\\\\GitHub\\\\\\\\project-0312\"}}}' | npx -y godot-mcp@latest 2>&1)",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 3, \"method\": \"tools/call\", \"params\": {\"name\": \"run_project\", \"arguments\": {\"projectPath\": \"C:/Users/user/Documents/GitHub/project-0312\"}}}' | npx -y godot-mcp@latest 2>&1)",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 4, \"method\": \"tools/call\", \"params\": {\"name\": \"run_project\", \"arguments\": {\"projectPath\": \"C:/Users/user/Documents/GitHub/project-0312\"}}}' | GODOT_PATH=\"C:/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" npx -y godot-mcp@latest 2>&1)",
+      "Bash(echo '{\"jsonrpc\": \"2.0\", \"id\": 5, \"method\": \"tools/call\", \"params\": {\"name\": \"get_debug_output\", \"arguments\": {}}}' | GODOT_PATH=\"C:/Users/user/Desktop/game/Godot_v4.6-stable_win64.exe\" npx -y godot-mcp@latest 2>&1)",
+      "Bash(godot-mcp-server --help 2>&1 | head -30)"
     ]
   }
 }

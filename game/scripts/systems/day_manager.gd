@@ -13,6 +13,9 @@ extends Node
 ## 一天的實際持續時間（秒）
 @export var day_duration_seconds: float = 180.0  # 預設 3 分鐘
 
+## 啟動時是否自動開始第一天
+@export var auto_start_first_day: bool = true
+
 ## 遊戲內開始時間（小時，24小時制）
 @export var day_start_hour: float = 9.0  # 上午 9 點
 
@@ -32,6 +35,10 @@ var time_elapsed: float = 0.0
 ## 是否正在營業中
 var is_day_active: bool = false
 
+## 除錯用時間倍率
+var debug_day_speed_multiplier: float = 1.0
+var _is_transitioning: bool = false
+
 # ============================================
 # Lifecycle
 # ============================================
@@ -40,13 +47,15 @@ func _ready() -> void:
 	print("[DayManager] 初始化完成，預設營業時間: %.0f 秒 (%.1f 小時 ~ %.1f 小時)" % [
 		day_duration_seconds, day_start_hour, day_end_hour
 	])
+	if auto_start_first_day and (SaveManager == null or not SaveManager.should_skip_initial_day_start()):
+		call_deferred("start_day")
 
 func _process(delta: float) -> void:
 	if not is_day_active:
 		return
 
 	# 累積時間
-	time_elapsed += delta
+	time_elapsed += delta * debug_day_speed_multiplier
 
 	# 格式化並發射時間更新
 	var formatted_time: String = _get_formatted_time()
@@ -100,6 +109,71 @@ func advance_to_next_day() -> void:
 	current_day += 1
 	print("[DayManager] 準備進入第 %d 天" % current_day)
 
+func is_transitioning() -> bool:
+	return _is_transitioning
+
+func transition_to_next_day_pre_open() -> bool:
+	if _is_transitioning:
+		push_warning("[DayManager] Next-day transition already in progress")
+		return false
+
+	_is_transitioning = true
+	var success: bool = false
+	var executor: CustomerSpawnExecutor = _find_spawn_executor()
+	var registry: PlaceableRuntimeRegistry = SaveManager.get_runtime_registry() if SaveManager != null else null
+
+	if executor != null:
+		executor.settle_for_day_close()
+	elif is_day_active:
+		end_day()
+
+	if SaveManager != null and not SaveManager.save_current_boundary():
+		_is_transitioning = false
+		return false
+
+	advance_to_next_day()
+	if SaveManager != null:
+		SaveManager.clear_day_plans()
+
+	var generator: CustomerPlanGenerator = CustomerPlanGenerator.new()
+	get_tree().current_scene.add_child(generator)
+	var next_day_plans: Array[CustomerDayPlan] = generator.generate_day_plans(current_day, registry)
+	generator.queue_free()
+
+	restore_pre_open_day(current_day)
+	if SaveManager != null:
+		SaveManager.set_current_day_plans(next_day_plans)
+		success = SaveManager.save_current_boundary()
+	else:
+		success = true
+
+	_is_transitioning = false
+	return success
+
+func restore_pre_open_day(day_index: int) -> void:
+	current_day = max(day_index, 1)
+	time_elapsed = 0.0
+	is_day_active = false
+	SignalManager.time_ticked.emit(_get_formatted_time())
+
+func get_current_formatted_time() -> String:
+	return _get_formatted_time()
+
+func _find_spawn_executor() -> CustomerSpawnExecutor:
+	var current_scene: Node = get_tree().current_scene
+	if current_scene == null:
+		return null
+	return _find_spawn_executor_recursive(current_scene)
+
+func _find_spawn_executor_recursive(root: Node) -> CustomerSpawnExecutor:
+	if root is CustomerSpawnExecutor:
+		return root as CustomerSpawnExecutor
+	for child in root.get_children():
+		var found: CustomerSpawnExecutor = _find_spawn_executor_recursive(child)
+		if found != null:
+			return found
+	return null
+
 # ============================================
 # 內部工具
 # ============================================
@@ -131,3 +205,10 @@ func get_day_progress() -> float:
 ## 取得剩餘時間（秒）
 func get_remaining_time() -> float:
 	return maxf(0.0, day_duration_seconds - time_elapsed)
+
+func set_debug_day_speed_multiplier(multiplier: float) -> void:
+	debug_day_speed_multiplier = clampf(multiplier, 1.0, 8.0)
+	print("[DayManager] 除錯時間倍率已設定為 %.1fx" % debug_day_speed_multiplier)
+
+func get_debug_day_speed_multiplier() -> float:
+	return debug_day_speed_multiplier

@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://bs1m4loskawhp"]
+
+[ext_resource type="Script" uid="uid://8xbdjh6pkjbv" path="res://game/scripts/debug/de_bug_tools.gd" id="1_ycvke"]
+[ext_resource type="Script" uid="uid://bfm0ec64xbtur" path="res://game/scripts/debug/world_de_bug.gd" id="2_8h078"]
+[ext_resource type="Script" uid="uid://b6ly0jtmtgnwf" path="res://game/scripts/debug/message_hud.gd" id="3_6w6h6"]
+
+[node name="DeBugTools" type="Node2D" unique_id=2135702082]
+script = ExtResource("1_ycvke")
+
+[node name="WorldDeBug" type="Node2D" parent="." unique_id=1711817046]
+script = ExtResource("2_8h078")
+
+[node name="MessageHUD" type="CanvasLayer" parent="." unique_id=1078219423]
+script = ExtResource("3_6w6h6")
+panel_offset = Vector2(10, 40)
+panel_size = Vector2(440, 250)
+log_min_size = Vector2(400, 100)
+
+[node name="DeBugPanel" type="PanelContainer" parent="MessageHUD" unique_id=543809290]
+offset_right = 560.0
+offset_bottom = 320.0
+
+[node name="Margin" type="MarginContainer" parent="MessageHUD/DeBugPanel" unique_id=1119584939]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="Content" type="VBoxContainer" parent="MessageHUD/DeBugPanel/Margin" unique_id=139612550]
+layout_mode = 2
+
+[node name="ControlsRow" type="HBoxContainer" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=908112001]
+layout_mode = 2
+
+[node name="SpawnCustomerButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=438118210]
+layout_mode = 2
+text = "生成顧客"
+
+[node name="EditModeButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=1670212295]
+layout_mode = 2
+text = "編輯模式"
+
+[node name="SaveButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=196712792]
+layout_mode = 2
+text = "存檔"
+
+[node name="LoadButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=1699271831]
+layout_mode = 2
+text = "讀檔"
+
+[node name="DaySpeedLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=932661248]
+layout_mode = 2
+text = "時間倍率"
+
+[node name="DaySpeedOptionButton" type="OptionButton" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=673106099]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SnapshotLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=16918398]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "玩家狀態快照"
+autowrap_mode = 3
+
+[node name="TableLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=556566827]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "桌子狀態快照"
+autowrap_mode = 3
+
+[node name="LogOutLabel" type="RichTextLabel" parent="MessageHUD/DeBugPanel/Margin/Content" unique_id=764960896]
+custom_minimum_size = Vector2(400, 100)
+layout_mode = 2
+scroll_following = true

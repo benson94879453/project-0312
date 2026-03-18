@@ -13,3 +13,6 @@ class_name ChairData
 
 # 這張椅子的位子資料表，seat_slot_position是相對於椅子中心的座標
 @export var seats: Array[SeatSlotData] = []
+
+@export_category("Placement")
+@export var footprint_cells: Array[Vector2i] = [Vector2i.ZERO]

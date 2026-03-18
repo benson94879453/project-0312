@@ -1,0 +1,50 @@
+Task 1 Evidence: Placeable Contracts Schema Verification
+=====================================================
+
+Files Created:
+1. game/scripts/data/placeable_data.gd
+   - placeable_id: String (stable identifier)
+   - type_key: String ("table", "chair", "decor")
+   - resource_path: String (path to resource)
+   - grid_position: Vector2i (grid coordinates)
+   - rotation_step: int (0-3)
+   - metadata: Dictionary (type-specific data)
+
+2. game/scripts/data/placeable_record.gd
+   - placeable_id: String (stable ID)
+   - type_key: String
+   - resource_id: String (references TableData/ChairData)
+   - grid_x, grid_y: int (coordinates)
+   - rotation_step: int
+   - linked_placeable_id: String (chair-table link via stable ID)
+
+3. game/scripts/data/customer_day_plan.gd
+   - customer_plan_id: String
+   - arrival_time_seconds: float
+   - order_pool: Array[String]
+   - patience_seconds: float
+   - preferred_table_id: String
+   - status: String (pending/active/completed/lost)
+   - attributes: Dictionary
+
+4. game/scripts/data/day_snapshot.gd
+   - save_version: int
+   - day_index: int
+   - money: int
+   - placeable_records: Array
+   - customer_day_plans: Array
+   - timestamp_iso: String
+   - Comments document pre-open boundary restore semantics
+
+5. game/scripts/data/save_constants.gd
+   - SAVE_VERSION: int = 1
+   - SAVE_FILE_PATH: String
+   - Type constants: TYPE_TABLE, TYPE_CHAIR, TYPE_DECOR
+   - Status constants: STATUS_PENDING, STATUS_ACTIVE, STATUS_COMPLETED, STATUS_LOST
+   - Rotation constants: ROTATION_0, ROTATION_90, ROTATION_180, ROTATION_270
+
+Verification: PASS
+- All required fields present
+- Stable ID support confirmed
+- Pre-open boundary semantics documented
+- Version field present for migration

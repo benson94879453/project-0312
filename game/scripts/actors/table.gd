@@ -8,6 +8,7 @@ signal interaction_processed(result: Dictionary)
 
 @export var data: TableData
 @export var show_debug_seats: bool = true
+@export var placeable_id: String = ""
 
 # Runtime table-centric data.
 var current_customers: Array[Node] = []
@@ -35,6 +36,13 @@ func _ready() -> void:
 		_initialize_from_data()
 
 func _initialize_from_data() -> void:
+	for slot_sprite in slot_sprites:
+		if slot_sprite != null:
+			slot_sprite.queue_free()
+	slot_sprites.clear()
+	foods_on_table.clear()
+	food_slot_customers.clear()
+
 	sprite.texture = data.texture
 	sprite.offset = data.sprite_offset
 
@@ -66,6 +74,76 @@ func register_new_seats(chair: Chair, seat_info_list: Array[Dictionary]) -> void
 	for seat_info in seat_info_list:
 		available_seats.append(_build_seat_record(seat_info))
 	queue_redraw()
+
+func unregister_chair(chair: Chair) -> void:
+	if chair == null:
+		return
+
+	connected_chairs.erase(chair)
+	var filtered_seats: Array[Dictionary] = []
+	for seat in available_seats:
+		var seat_chair: Chair = seat.get("chair", null) as Chair
+		if seat_chair != chair:
+			filtered_seats.append(seat)
+	available_seats = filtered_seats
+	queue_redraw()
+
+func clear_registered_seats() -> void:
+	connected_chairs.clear()
+	available_seats.clear()
+	queue_redraw()
+
+func set_placeable_id(new_placeable_id: String) -> void:
+	placeable_id = new_placeable_id
+
+func get_placeable_type_key() -> String:
+	return SaveConstants.TYPE_TABLE
+
+func get_placeable_resource_id() -> String:
+	if data == null:
+		return ""
+	return data.table_id
+
+func set_placeable_resource_id(resource_id: String) -> bool:
+	if resource_id.is_empty():
+		return false
+	var resource: TableData = _load_table_data(resource_id)
+	if resource == null:
+		return false
+	data = resource
+	if is_node_ready():
+		_initialize_from_data()
+	return true
+
+func get_placeable_rotation_step() -> int:
+	var quarter_turns: int = int(round(rad_to_deg(rotation) / 90.0))
+	return posmod(quarter_turns, 4)
+
+func set_placeable_rotation_step(rotation_step: int) -> void:
+	rotation = deg_to_rad(float(posmod(rotation_step, 4) * 90))
+
+func get_placeable_footprint_cells() -> Array[Vector2i]:
+	if data == null or data.footprint_cells.is_empty():
+		return [Vector2i.ZERO]
+	return data.footprint_cells.duplicate()
+
+func _load_table_data(resource_id: String) -> TableData:
+	var directory: DirAccess = DirAccess.open("res://game/data/tables")
+	if directory == null:
+		return null
+
+	directory.list_dir_begin()
+	var file_name: String = directory.get_next()
+	while not file_name.is_empty():
+		if not directory.current_is_dir() and file_name.ends_with(".tres"):
+			var resource_path: String = "res://game/data/tables/%s" % file_name
+			var candidate: TableData = load(resource_path) as TableData
+			if candidate != null and candidate.table_id == resource_id:
+				directory.list_dir_end()
+				return candidate
+		file_name = directory.get_next()
+	directory.list_dir_end()
+	return null
 
 func reserve_seat(actor: Node) -> bool:
 	return reserve_seat_with_info(actor).get("ok", false)
@@ -160,6 +238,18 @@ func register_order(order: OrderData) -> bool:
 	expected_orders.append(order)
 	order_registered.emit(order.customer, order.food.id)
 	return true
+
+func cancel_order_for_customer(customer: Node) -> bool:
+	if customer == null:
+		return false
+
+	for i in range(expected_orders.size() - 1, -1, -1):
+		var order: OrderData = expected_orders[i]
+		if order != null and order.customer == customer:
+			expected_orders.remove_at(i)
+			return true
+
+	return false
 
 func receive_food(food_item: FoodData) -> bool:
 	return try_receive_food(food_item).get("ok", false)

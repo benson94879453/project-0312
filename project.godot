@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 SignalManager="*uid://bydvdb6nlr557"
 ItemDatabase="*uid://bt47116du5th0"
 EconomyManager="*uid://dttet8dfeudhf"
+SaveManager="*res://game/scripts/systems/save_manager.gd"
 DayManager="*uid://bniwvrwaml5hb"
 
 [display]

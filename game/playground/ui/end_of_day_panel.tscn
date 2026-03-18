@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://d4f5g6h7i8kak"]
+
+[ext_resource type="Script" uid="uid://d1p67nfsq68ce" path="res://game/scripts/systems/end_of_day_panel.gd" id="1_3a13g"]
+
+[node name="EndOfDayPanel" type="PanelContainer" unique_id=927491374]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3a13g")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=132770348]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1947155306]
+layout_mode = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1487582787]
+layout_mode = 2
+text = "營業結束"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=207304913]
+layout_mode = 2
+
+[node name="StatsGrid" type="GridContainer" parent="MarginContainer/VBoxContainer" unique_id=1021930718]
+layout_mode = 2
+columns = 2
+
+[node name="IncomeTitle" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=670378726]
+layout_mode = 2
+text = "今日收入:"
+
+[node name="IncomeValue" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=205141709]
+layout_mode = 2
+text = "$0"
+horizontal_alignment = 2
+
+[node name="ServedTitle" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=601817509]
+layout_mode = 2
+text = "服務客數:"
+
+[node name="ServedValue" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=269115250]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 2
+
+[node name="LostTitle" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=1721771381]
+layout_mode = 2
+text = "流失客數:"
+
+[node name="LostValue" type="Label" parent="MarginContainer/VBoxContainer/StatsGrid" unique_id=1977478463]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 2
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer" unique_id=216642149]
+layout_mode = 2
+
+[node name="EditModeButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=665082315]
+layout_mode = 2
+text = "進入編輯模式"
+
+[node name="NextDayButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=665082314]
+layout_mode = 2
+text = "開始下一天"

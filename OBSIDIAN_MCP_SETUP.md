@@ -44,11 +44,11 @@ For clients that accept a stdio MCP server command, use:
 ```json
 {
   "mcpServers": {
-    "obsidian": {
-      "command": "npm",
-      "args": ["run", "obsidian:mcp"],
-      "cwd": "C:\\Users\\user\\Documents\\GitHub\\project-0312"
-    }
+	"obsidian": {
+	  "command": "npm",
+	  "args": ["run", "obsidian:mcp"],
+	  "cwd": "C:\\Users\\user\\Documents\\GitHub\\project-0312"
+	}
   }
 }
 ```
@@ -58,10 +58,10 @@ If your client prefers calling Node directly:
 ```json
 {
   "mcpServers": {
-    "obsidian": {
-      "command": "node",
-      "args": ["C:\\Users\\user\\Documents\\GitHub\\project-0312\\tools\\obsidian-mcp-server.mjs"]
-    }
+	"obsidian": {
+	  "command": "node",
+	  "args": ["C:\\Users\\user\\Documents\\GitHub\\project-0312\\tools\\obsidian-mcp-server.mjs"]
+	}
   }
 }
 ```

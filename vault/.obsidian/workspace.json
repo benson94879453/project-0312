@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "customer-chair-table-architecture.md",
+                "file": "current/task.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "customer-chair-table-architecture"
+              "title": "task"
             }
           }
         ]
@@ -180,7 +180,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,22 +195,24 @@
       "mermaid-tools:Open Mermaid Toolbar": false
     }
   },
-  "active": "572546b5a21cfe62",
+  "active": "769c08af90c3bf6b",
   "lastOpenFiles": [
-    "note.md",
-    "customer-chair-table-architecture.md",
-    "UIManager.md",
-    "task.md",
-    "UIManager.md17747985353.tmp",
-    "未命名.base",
     "未命名.md",
-    "changelog/log0316.md",
-    "game-map/game-diagrams.md.md",
     "未命名 1.base",
-    "game-map/game-mindmap.md.md",
+    "changelog/log0316.md",
+    "changelog",
     "game-map/game-pm-spec.md.md",
     "game-map/game-structure.md.md",
-    "changelog",
+    "game-map/game-diagrams.md.md",
+    "current/debug-tools-and-opencode-update.md",
+    "current/task.md",
+    "current/customer-chair-table-architecture.md",
+    "current/UIManager.md",
+    "note.md",
+    "未命名.base",
+    "game-map/game-mindmap.md.md",
+    "current",
+    "UIManager.md17747985353.tmp",
     "tutorial/godot-collision.md",
     "tutorial/godot-collision.md",
     "game-map",

@@ -21,3 +21,6 @@ class_name TableData
 	Vector2(-10, 5),  # 左下
 	Vector2(10, 5)    # 右下
 ]
+
+@export_category("Placement")
+@export var footprint_cells: Array[Vector2i] = [Vector2i.ZERO]

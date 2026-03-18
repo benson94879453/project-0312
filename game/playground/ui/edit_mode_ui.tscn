@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://h3x1mf5bb5aa"]
+
+[ext_resource type="Script" path="res://game/scripts/ui/edit_mode_ui.gd" id="1_editui"]
+
+[node name="EditModeUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_editui")
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -60.0
+offset_right = 200.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Edit Mode - Select furniture or place new"
+horizontal_alignment = 1
+
+[node name="ToolbarPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 280.0
+grow_horizontal = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="ToolbarPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ToolbarPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Edit Mode"
+horizontal_alignment = 1
+
+[node name="Separator" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="PlacementLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Place New"
+
+[node name="PlacementRow" type="HBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TableButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Table"
+
+[node name="ChairButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/PlacementRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Chair"
+
+[node name="Separator2" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ActionLabel" type="Label" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Actions"
+
+[node name="ActionRow" type="VBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MoveButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+layout_mode = 2
+disabled = true
+text = "Move Selected"
+
+[node name="RotateButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+layout_mode = 2
+disabled = true
+text = "Rotate (R)"
+
+[node name="ConfirmButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+layout_mode = 2
+disabled = true
+text = "Confirm (Enter)"
+
+[node name="CancelButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+layout_mode = 2
+disabled = true
+text = "Cancel (Esc)"
+
+[node name="DeleteButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ActionRow"]
+layout_mode = 2
+text = "Delete (Del)"
+
+[node name="Separator3" type="HSeparator" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ExitRow" type="HBoxContainer" parent="ToolbarPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ExitButton" type="Button" parent="ToolbarPanel/MarginContainer/VBoxContainer/ExitRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Exit Edit Mode"

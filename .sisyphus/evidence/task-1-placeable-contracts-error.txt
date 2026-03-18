@@ -1,0 +1,22 @@
+Task 1 Evidence: Forbidden Fields Check
+======================================
+
+Checking for prohibited fields in save contracts:
+
+Scanned Files:
+- placeable_data.gd
+- placeable_record.gd
+- customer_day_plan.gd
+- day_snapshot.gd
+- save_constants.gd
+
+Forbidden Patterns Checked:
+- NodePath fields: NOT FOUND
+- Live runtime state (NavigationAgent): NOT FOUND
+- In-progress customer refs: NOT FOUND
+- Editor-only resource handles: NOT FOUND
+- Mid-day resume fields: NOT FOUND
+
+Result: PASS
+All contracts follow the constraint of storing only durable, serializable data.
+No runtime-only state is persisted in the save schema.

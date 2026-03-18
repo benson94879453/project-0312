@@ -139,6 +139,10 @@ func _enter_state(next_state: int) -> void:
 				return
 			_eating_timer.start(duration)
 		CustomerState.LEAVING:
+			if failure_reason == "patience_depleted" and assigned_table != null:
+				assigned_table.cancel_order_for_customer(customer)
+				current_order = null
+				customer.current_order = null
 			customer.prepare_for_leaving()
 			customer.enter_leaving(failure_reason)
 
