@@ -49,6 +49,14 @@ text = "存檔"
 layout_mode = 2
 text = "讀檔"
 
+[node name="StartDayButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow"]
+layout_mode = 2
+text = "開始營業"
+
+[node name="CoffeeButton" type="Button" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow"]
+layout_mode = 2
+text = "拿 Coffee"
+
 [node name="DaySpeedLabel" type="Label" parent="MessageHUD/DeBugPanel/Margin/Content/ControlsRow" unique_id=932661248]
 layout_mode = 2
 text = "時間倍率"

@@ -90,6 +90,13 @@ func force_spawn_customer(plan_index: int) -> Dictionary:
 		return {"ok": false, "message": "Invalid plan index"}
 	return _spawn_customer_from_plan(_day_plans[plan_index])
 
+func spawn_next_pending_customer() -> Dictionary:
+	for index in range(_day_plans.size()):
+		var plan: CustomerDayPlan = _day_plans[index]
+		if plan.status == SaveConstants.STATUS_PENDING:
+			return force_spawn_customer(index)
+	return {"ok": false, "message": "No pending customer plan available"}
+
 func _resolve_references() -> void:
 	if not registry_path.is_empty():
 		_registry = get_node_or_null(registry_path) as PlaceableRuntimeRegistry

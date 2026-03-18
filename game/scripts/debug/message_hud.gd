@@ -5,6 +5,8 @@ signal day_speed_selected(multiplier: float)
 signal edit_mode_requested()
 signal save_requested()
 signal load_requested()
+signal start_day_requested()
+signal coffee_requested()
 
 @export_category("Debug Panel Layout")
 @export var panel_offset: Vector2 = Vector2(0.0, 70.0):
@@ -40,6 +42,8 @@ signal load_requested()
 @onready var edit_mode_button: Button = $DeBugPanel/Margin/Content/ControlsRow/EditModeButton
 @onready var save_button: Button = $DeBugPanel/Margin/Content/ControlsRow/SaveButton
 @onready var load_button: Button = $DeBugPanel/Margin/Content/ControlsRow/LoadButton
+@onready var start_day_button: Button = $DeBugPanel/Margin/Content/ControlsRow/StartDayButton
+@onready var coffee_button: Button = $DeBugPanel/Margin/Content/ControlsRow/CoffeeButton
 @onready var day_speed_label: Label = $DeBugPanel/Margin/Content/ControlsRow/DaySpeedLabel
 @onready var day_speed_option_button: OptionButton = $DeBugPanel/Margin/Content/ControlsRow/DaySpeedOptionButton
 
@@ -93,7 +97,7 @@ func _initialize_runtime() -> void:
 		_interaction_component = _player.get_node_or_null("InteractionComponent") as Area2D
 	_setup_controls()
 	_connect_signals()
-	_append_log("除錯面板已就緒（互動=E，奔跑=Shift）")
+	_append_log("除錯面板已就緒（請以滑鼠點擊按鈕操作）")
 	_refresh_text()
 
 func _process(delta: float) -> void:
@@ -112,6 +116,10 @@ func _connect_signals() -> void:
 		save_button.pressed.connect(_on_save_button_pressed)
 	if load_button != null and not load_button.pressed.is_connected(_on_load_button_pressed):
 		load_button.pressed.connect(_on_load_button_pressed)
+	if start_day_button != null and not start_day_button.pressed.is_connected(_on_start_day_button_pressed):
+		start_day_button.pressed.connect(_on_start_day_button_pressed)
+	if coffee_button != null and not coffee_button.pressed.is_connected(_on_coffee_button_pressed):
+		coffee_button.pressed.connect(_on_coffee_button_pressed)
 	if day_speed_option_button != null and not day_speed_option_button.item_selected.is_connected(_on_day_speed_option_selected):
 		day_speed_option_button.item_selected.connect(_on_day_speed_option_selected)
 
@@ -304,6 +312,12 @@ func _on_save_button_pressed() -> void:
 
 func _on_load_button_pressed() -> void:
 	load_requested.emit()
+
+func _on_start_day_button_pressed() -> void:
+	start_day_requested.emit()
+
+func _on_coffee_button_pressed() -> void:
+	coffee_requested.emit()
 
 func _on_day_speed_option_selected(index: int) -> void:
 	if index < 0 or index >= _day_speed_values.size():

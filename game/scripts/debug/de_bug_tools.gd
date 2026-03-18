@@ -14,9 +14,10 @@ func _ready() -> void:
 	var customer: Node = get_node_or_null(customer_path)
 	var leave_target: Node2D = get_node_or_null(leave_target_path) as Node2D
 	var spawn_parent: Node = get_parent()
+	var spawn_executor: CustomerSpawnExecutor = get_node_or_null("../CustomerSpawnExecutor") as CustomerSpawnExecutor
 
 	if world_de_bug != null and world_de_bug.has_method("setup"):
-		world_de_bug.call("setup", player, table, customer, leave_target, spawn_parent)
+		world_de_bug.call("setup", player, table, customer, leave_target, spawn_parent, spawn_executor)
 	if message_hud != null and message_hud.has_method("setup"):
 		message_hud.call("setup", player, table, customer, DayManager)
 
@@ -29,6 +30,10 @@ func _ready() -> void:
 			message_hud.connect("save_requested", Callable(self, "_on_save_requested"))
 		if message_hud.has_signal("load_requested") and not message_hud.is_connected("load_requested", Callable(self, "_on_load_requested")):
 			message_hud.connect("load_requested", Callable(self, "_on_load_requested"))
+		if message_hud.has_signal("start_day_requested") and not message_hud.is_connected("start_day_requested", Callable(self, "_on_start_day_requested")):
+			message_hud.connect("start_day_requested", Callable(self, "_on_start_day_requested"))
+		if message_hud.has_signal("coffee_requested") and not message_hud.is_connected("coffee_requested", Callable(self, "_on_coffee_requested")):
+			message_hud.connect("coffee_requested", Callable(self, "_on_coffee_requested"))
 		if message_hud.has_signal("day_speed_selected") and not message_hud.is_connected("day_speed_selected", Callable(self, "_on_day_speed_selected")):
 			message_hud.connect("day_speed_selected", Callable(self, "_on_day_speed_selected"))
 
@@ -78,6 +83,29 @@ func _on_load_requested() -> void:
 	var success: bool = SaveManager != null and SaveManager.load_latest_snapshot()
 	if message_hud != null and message_hud.has_method("append_debug_event"):
 		message_hud.call("append_debug_event", "已載入最新存檔" if success else "讀檔失敗：%s" % _get_save_error())
+
+func _on_start_day_requested() -> void:
+	if DayManager == null:
+		return
+	if DayManager.is_transitioning():
+		if message_hud != null and message_hud.has_method("append_debug_event"):
+			message_hud.call("append_debug_event", "日切換進行中，暫時無法開始營業")
+		return
+	if DayManager.is_day_active:
+		if message_hud != null and message_hud.has_method("append_debug_event"):
+			message_hud.call("append_debug_event", "目前已在營業中")
+		return
+
+	DayManager.start_day()
+	if message_hud != null and message_hud.has_method("append_debug_event"):
+		message_hud.call("append_debug_event", "已開始營業")
+
+func _on_coffee_requested() -> void:
+	if world_de_bug == null or not world_de_bug.has_method("grant_food_to_target"):
+		return
+	var result: Dictionary = world_de_bug.call("grant_food_to_target") as Dictionary
+	if message_hud != null and message_hud.has_method("append_debug_event"):
+		message_hud.call("append_debug_event", String(result.get("message", "已嘗試給予 coffee")))
 
 func _get_save_error() -> String:
 	if SaveManager == null or not SaveManager.has_method("get_last_error_message"):
